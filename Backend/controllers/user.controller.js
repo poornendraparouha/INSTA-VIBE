@@ -1,7 +1,9 @@
-import User from "../models/user.model.js";
+import {User} from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { get } from "http";
 import jwt from "jsonwebtoken";
+import getDataUri from "../utility/datauri.js";
+import cloudinary from "../utility/cloudinary.js";
 
 export const register = async (req, res) => {
     try {
@@ -20,7 +22,7 @@ export const register = async (req, res) => {
             });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        await newUser.create({
+        await User.create({
             username,
             email,
             password:hashedPassword
@@ -104,10 +106,10 @@ export const logout = async (req, res) => {
     }
 }
 
-const getProfile = async (req, res) => {
+export const getProfile = async (req, res) => {
     try {
         const userId = req.params.id;
-        const user = await User.findById(userId)
+        const user = await User.findById(userId).select('-password');
         return res.status(200).json({
             message: "User profile fetched successfully",
             user,
@@ -121,14 +123,14 @@ export const updateProfile = async (req, res) => {
     try {
         const userId = req.id;
         const {bio, gender} = req.body;
-        const { profilePicture} = req.file;
+        const profilePicture = req.file;
         let cloudResponse;
         
         if (profilePicture) {
             const fileUri = getDataUri(profilePicture);
             cloudResponse = await cloudinary.uploader.upload(fileUri);
         }
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select('-password');
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
