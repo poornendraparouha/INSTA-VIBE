@@ -6,11 +6,12 @@ const conversationSchema = new mongoose.Schema({
         ref: "User",
         required: true
     }],
-    message: [{
+    messages: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message",
         required: true
     }]
 }, { timestamps: true });
 
-export default Conversation = mongoose.model("Conversation", conversationSchema);
+export const Conversation = mongoose.model("Conversation", conversationSchema);
+

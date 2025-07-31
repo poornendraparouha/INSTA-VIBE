@@ -2,6 +2,7 @@ import sharp from "sharp";
 import cloudinary from "../utility/cloudinary.js";
 import {Post} from "../models/post.model.js"
 import {User} from "../models/user.model.js"
+import { Comment } from "../models/comment.model.js";
 
 
 export const addNewPost = async (req, res) => {
@@ -79,7 +80,7 @@ export const getUserPost = async (req, res) => {
 
 export const likePost = async (req, res) =>  {
     try {
-        const likeKarneWalaUserKiId = req.id;
+        const likingPersonsUserId = req.id;
         const postId = req.params.id;
         const post = await Post.findById(postId);
         if(!post) {
@@ -89,8 +90,9 @@ export const likePost = async (req, res) =>  {
             })
         }
         // Like Logic 
-        await post.update({$addToSet:{likes:likeKarneWalaUserKiId}});
-        await post.save();
+        // await post.update({$addToSet:{likes:likingPersonsUserId}});
+        // await post.save();
+        await Post.findByIdAndUpdate(postId,{$addToSet:{likes:likingPersonsUserId}});
 
         // implement socket io for realtime notification
 
@@ -117,8 +119,10 @@ export const dislikePost = async (req, res) => {
             })
         }
         // Like Logic 
-        await post.update({$pull:{likes:likingPersonsId}});
-        await post.save();
+        // await post.update({$pull:{likes:likingPersonsId}});
+        // await post.save();
+        await Post.findByIdAndUpdate(postId,{ $pull: { likes: likingPersonsId } });
+
 
         return res.status(200).json({
                 message: "Post Disliked",
@@ -134,7 +138,6 @@ export const addComments = async (req,res) => {
     try {
         const commentingPersonsId = req.id;
         const postId = req.params.id;
-
         const {text} = req.body;
         const post = await Post.findById(postId);
         if(!text) {
@@ -147,14 +150,18 @@ export const addComments = async (req,res) => {
             text,
             author:commentingPersonsId,
             post:postId
-        }).populate({path:"author", select:"username, profilePicture"});
+        })
+        // .populate({path:"author", select:"username profilePicture"});
+
+        const populatedComment = await Comment.findById(comment._id)
+       .populate({ path: "author", select: "username profilePicture" });
 
         post.comments.push(comment._id);
         await post.save();
 
         return res.status(201).json({
                 message: "Comment Added Successfully",
-                comment,
+                comment:populatedComment,
                 success: true
             })
         
@@ -166,7 +173,7 @@ export const addComments = async (req,res) => {
 export const getCommentsOfPost = async (req, res) => {
     try {
         const postId = req.params.id;
-        const comments = await Comment.find({post:postId}).populate('author', 'username', 'profilePicture');
+        const comments = await Comment.find({post:postId}).populate('author', 'username profilePicture');
         if(!comments) {
             return res.status(404).json({
                 message: "Comments Not Found",
@@ -205,7 +212,7 @@ export const deletePost = async (req, res) => {
 
         // remove post id from user's post
         let user = await User.findById(authorId);
-        user.posts = user.posts.filter(id == id.toString() !== postId)
+        user.posts = user.posts.filter(id => id.toString() !== postId)
         await user.save();
 
         // delete Associated comments
@@ -225,7 +232,7 @@ export const deletePost = async (req, res) => {
 export const bookmarkPost = async (req, res) => {
     try {
         const postId = req.params.id;
-        authorId = req.id;
+        const authorId = req.id;
 
         const post = await Post.findById(postId);
         if(!post) {
@@ -237,7 +244,7 @@ export const bookmarkPost = async (req, res) => {
         let user = await User.findById(authorId);
         if(user.bookmarks.includes(post._id)){
             // if already bookmarked -->remove from bookmarks
-            await user.updateOne({$pull:{boolkmarks:post._id}});
+            await user.updateOne({$pull:{bookmarks:post._id}});
             await user.save();
             return res.status(200).json({
                 type:"unsaved",
@@ -245,7 +252,7 @@ export const bookmarkPost = async (req, res) => {
                 success: true
             })
         }else{
-            await user.updateOne({$addToSet:{boolkmarks:post._id}});
+            await user.updateOne({$addToSet:{bookmarks:post._id}});
             await user.save();
             return res.status(200).json({
                 type:"saved",
