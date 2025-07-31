@@ -6,9 +6,8 @@ import { toast } from "sonner";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function Signup() {
+export default function Login() {
 	const [input, setInput] = useState({
-		username: "",
 		email: "",
 		password: "",
 	});
@@ -21,7 +20,7 @@ export default function Signup() {
 		try {
 			setLoading(true);
 			const res = await axios.post(
-				"http://localhost:8000/api/v1/user/register",
+				"http://localhost:8000/api/v1/user/login",
 				input,
 				{
 					headers: {
@@ -33,7 +32,6 @@ export default function Signup() {
 			if (res.data.success) {
 				toast.success(res.data.message);
 				setInput({
-					username: "",
 					email: "",
 					password: "",
 				});
@@ -53,22 +51,7 @@ export default function Signup() {
 			>
 				<div className="my-4">
 					<h1 className="text-center font-bold text-xl">LOGO</h1>
-					<p className="text-sm text-center">
-						Signup to see photos and vidios from your friends
-					</p>
-				</div>
-				<div>
-					<Label className="font-medium " htmlFor="username">
-						Username
-					</Label>
-					<Input
-						type="text"
-						name="username"
-						value={input.username}
-						onChange={changeEventHandeler}
-						className="focus-visible:ring-transparent my-2"
-						placeholder="Enter a username"
-					/>
+					<p className="text-sm text-center">Login to use my instagram clone</p>
 				</div>
 				<div>
 					<Label className="font-medium" htmlFor="email">
@@ -96,11 +79,11 @@ export default function Signup() {
 						placeholder="Enter password"
 					/>
 				</div>
-				<Button type-="submit">Sign Up</Button>
+				<Button type-="submit">Login</Button>
 				<span className="text-center">
-					Already have an account?{" "}
-					<Link to="/login" className="text-blue-600">
-						Login
+					Don&apos;t have an account?{" "}
+					<Link to="/signup" className="text-blue-600">
+						Signup
 					</Link>
 				</span>
 			</form>
