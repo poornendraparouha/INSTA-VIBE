@@ -1,6 +1,5 @@
 import {User} from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { get } from "http";
 import jwt from "jsonwebtoken";
 import getDataUri from "../utility/datauri.js";
 import cloudinary from "../utility/cloudinary.js";
@@ -60,6 +59,13 @@ export const login = async (req, res) => {
                 success: false
             });
         };
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        // populate each post id in the post array 
         user = {
             _id: user._id,
             username: user.username,
@@ -72,11 +78,7 @@ export const login = async (req, res) => {
             posts: user.posts,
             bookmarks: user.bookmarks
         }
-        const token = jwt.sign(
-            { userId: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
-        );
+        
         return res.cookie(
             "token",
             token,
