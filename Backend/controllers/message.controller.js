@@ -13,11 +13,11 @@ export const sendMessage = async (req, res) => {
         })
         // establish the conversation if not started
         if(!conversation){
-            conversation = await conversation.create({
+            conversation = await Conversation.create({
                 participants:[senderId, receiverId]
             })
         }
-        const newMessage = await message.create({
+        const newMessage = await Message.create({
             senderId,
             receiverId,
             message
@@ -42,7 +42,10 @@ export const getMessages = async (req, res) => {
     try {
         const senderId = req.id;
         const receiverId = req.params.id;
-        const conversation = await Conversation.find({participants:{$all:[senderId, receiverId]}});
+        const conversation = await Conversation.findOne({
+            participants:{$all:[senderId, receiverId]}
+        })
+        // .populate('messages'); this has to be done if required
         if(!conversation){
             return res.status(200).json({
             success:true,

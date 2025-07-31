@@ -9,7 +9,7 @@ const router = express.Router();
 router.route('/addpost').post(isAuthenticated, upload.single('image'), addNewPost);
 
 // Get All Posts (Public)
-router.route('/all').get(getAllPost);
+router.route('/allposts').get(getAllPost);
 
 // Get Posts by Logged-In User
 router.route('/userpost/all').get(isAuthenticated, getUserPost);
