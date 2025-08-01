@@ -1,16 +1,10 @@
-import {
-	Heart,
-	Home,
-	LogOutIcon,
-	MessageCircle,
-	PlusSquare,
-	Search,
-	Sidebar,
-	TrendingUp,
-} from "lucide-react";
+import {Heart, Home, LogOutIcon, MessageCircle, PlusSquare, Search, Sidebar, TrendingUp, } from "lucide-react";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "/public/instagram.png";
+import { toast } from "sonner";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const sidebarItems = [
 	{ icon: <Home />, text: "Home" },
@@ -32,6 +26,24 @@ const sidebarItems = [
 ];
 
 function LeftSidebar() {
+    const navigate = useNavigate();
+
+	const logoutHandler = async () => {
+		try {
+			const res = await axios.get("http://localhost:8000/api/v1/user/logout", {
+				withCredentials: true,
+			});
+            if(res.data.success){
+                navigate('/login');
+                toast.success(res.data.message)
+            }
+		} catch (error) {
+			toast.error(error.response.data.message);
+		}
+	};
+    const sidebarHandler = (textType) => {
+        if(textType === "Logout") logoutHandler();
+    }
 	return (
 		<div className="fixed top-0 left-0 h-screen w-[16%] min-w-[200px] bg-white border-r border-gray-200 shadow-md px-4 py-6 hidden sm:flex flex-col justify-between z-10">
 			<div className="flex flex-col gap-6">
@@ -42,13 +54,10 @@ function LeftSidebar() {
 
 				{sidebarItems.map((item, index) => {
 					return (
-						<div
-							key={index}
-							className="flex items-center gap-4 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-						>
+						<div onClick={()=>sidebarHandler(item.text)} key={index} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer relative">
 							{item.icon}
 							<span className="text-sm font-medium text-gray-800">
-								{item.text}
+							{item.text}
 							</span>
 						</div>
 					);
