@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 export default function Signup() {
 	const [input, setInput] = useState({
@@ -13,6 +14,7 @@ export default function Signup() {
 		password: "",
 	});
 	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 	const changeEventHandeler = (e) => {
 		setInput({ ...input, [e.target.name]: e.target.value });
 	};
@@ -31,6 +33,7 @@ export default function Signup() {
 				}
 			);
 			if (res.data.success) {
+				navigate("/login");
 				toast.success(res.data.message);
 				setInput({
 					username: "",
@@ -96,7 +99,14 @@ export default function Signup() {
 						placeholder="Enter password"
 					/>
 				</div>
-				<Button type-="submit">Sign Up</Button>
+				{loading ? (
+					<Button>
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						PLease wait
+					</Button>
+				) : (
+					<Button type-="submit">Sign Up</Button>
+				)}
 				<span className="text-center">
 					Already have an account?{" "}
 					<Link to="/login" className="text-blue-600">
