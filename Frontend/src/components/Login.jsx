@@ -68,6 +68,7 @@ export default function Login() {
 					<Input
 						type="email"
 						name="email"
+						autoComplete="email"
 						value={input.email}
 						onChange={changeEventHandeler}
 						className="focus-visible:ring-transparent my-2"
