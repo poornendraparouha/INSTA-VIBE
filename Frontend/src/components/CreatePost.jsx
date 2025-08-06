@@ -7,6 +7,8 @@ import { readFileDataURL } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setPosts } from "@/redux/postSlice";
 
 export default function CreatePost({ open, setOpen }) {
 	const imageRef = useRef();
@@ -14,6 +16,9 @@ export default function CreatePost({ open, setOpen }) {
 	const [caption, setCaption] = useState("");
 	const [imagePreview, setImagePreview] = useState("");
 	const [loading, setLoading] = useState(false);
+	const { user } = useSelector((store) => store.auth);
+	const { posts } = useSelector((store) => store.post);
+	const dispatch = useDispatch();
 
 	const fileChangeHandler = async (e) => {
 		const file = e.target.files?.[0];
@@ -25,25 +30,31 @@ export default function CreatePost({ open, setOpen }) {
 	};
 
 	const createPostHandler = async (e) => {
-    const formData = new FormData();
-    formData.append("caption", caption);
-    if(imagePreview) formData.append("image", file);
-    try {
-      setLoading(true);
-      const res = await axios.post("http://localhost:8000/api/v1/post/addpost", formData, {
-        Headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      })
-      if (res.data.success) {
-        toast.success(res.data.message);
-      }
+		const formData = new FormData();
+		formData.append("caption", caption);
+		if (imagePreview) formData.append("image", file);
+		try {
+			setLoading(true);
+			const res = await axios.post(
+				"http://localhost:8000/api/v1/post/addpost",
+				formData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+					withCredentials: true,
+				}
+			);
+			if (res.data.success) {
+				dispatch(setPosts([res.data.post, ...posts]));
+				toast.success(res.data.message);
+				setOpen(false);
+			}
 		} catch (error) {
-			toast.error(error.response?.data?.message || "Something went wrong");
-		}finally {
-      setLoading(false);
-    }
+			toast.error(error.response?.data?.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -54,11 +65,11 @@ export default function CreatePost({ open, setOpen }) {
 				</DialogHeader>
 				<div className="flex gap-3 items-center">
 					<Avatar>
-						<AvatarImage src="" alt="post_image" />
+						<AvatarImage src={user?.profilePicture} alt="post_image" />
 						<AvatarFallback>CN</AvatarFallback>
 					</Avatar>
 					<div>
-						<h1 className="font-semibold text-xs">username</h1>
+						<h1 className="font-semibold text-xs">{user?.username}</h1>
 						<span className="text-xs text-grey-600">Bio here...</span>
 					</div>
 				</div>

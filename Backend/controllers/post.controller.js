@@ -49,8 +49,8 @@ export const addNewPost = async (req, res) => {
 export const getAllPost = async (req, res) => {
     try {
         const posts = await Post.find().sort({createAt:-1})
-        .populate({path:'author', select:'username, profilePicture'})
-        .populate({path:'comments', sort:{createAt:-1}, populate:{path:'author', select:'username, profilePicture'}
+        .populate({path:'author', select:'username profilePicture'})
+        .populate({path:'comments', sort:{createAt:-1}, populate:{path:'author', select:'username profilePicture'}
         })
         return res.status(200).json({
                 message:"All Posts Fatched Successfully",
@@ -66,8 +66,8 @@ export const getAllPost = async (req, res) => {
 export const getUserPost = async (req, res) => {
     try {
         const authorId = req.id;
-        const posts = await Post.find({author:authorId}).sort({createAt:-1}).populate({path:"author", select:"username, profilePicture"
-        }).populate({path:'comments', sort:{createAt:-1}, populate:{path:'author', select:'username, profilePicture'}
+        const posts = await Post.find({author:authorId}).sort({createAt:-1}).populate({path:"author", select:"username profilePicture"
+        }).populate({path:'comments', sort:{createAt:-1}, populate:{path:'author', select:'username profilePicture'}
         });
         return res.status(200).json({
                 posts,

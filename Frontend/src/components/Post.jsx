@@ -10,9 +10,8 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import CommentDialog from "./CommentDialog";
-// import { FaRegHeart , FaHeart} from "react-icons/fa";
 
-export default function Post() {
+export default function Post({post}) {
 	const [text, setText] = useState("");
 		const [open, setOpen] = useState(false);
 
@@ -30,10 +29,10 @@ export default function Post() {
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
 					<Avatar>
-						<AvatarImage src="" alt="post_image" />
+						<AvatarImage src={post.author?.profilePicture} alt="post_image" />
 						<AvatarFallback>CN</AvatarFallback>
 					</Avatar>
-					<h1>username</h1>
+					<h1>{post.author?.username}</h1>
 				</div>
 				<Dialog>
 					<DialogTrigger asChild>
@@ -57,7 +56,7 @@ export default function Post() {
 			</div>
 			<img
 				className="rounded-sm my-2 w-full aspect-square object-cover"
-				src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg"
+				src={post.image}
 				alt="post_image"
 			/>
 				<div className="flex items-center justify-between mb-2">
@@ -81,12 +80,12 @@ export default function Post() {
 						className="cursor-pointer text-gray-700 hover:text-yellow-500 transition-colors duration-200"
 					/>
 				</div>
-				<span className="text-sm font-semibold text-gray-800 tracking-tight mb-2">1k likes</span>
+				<span className="text-sm font-semibold text-gray-800 tracking-tight mb-2">{post.likes.length}  likes</span>
 				<p>
-					<span className="font-sm mr-2">username</span>
-					caption 
+					<span className="font-sm mr-2">{post.author?.username}</span>
+					{post.caption} 
 				</p>
-				<span onClick={() =>setOpen(true)} className="text-sm cursor-pointer text-grey-400" >View all 10 comments </span>
+				<span onClick={() =>setOpen(true)} className="text-sm cursor-pointer text-grey-400" >{post.comments.length} comments </span>
 				<CommentDialog open={open} setOpen={setOpen} />
 				<div className="flex items-center justify-between gap-2 mt-2">
 					<input type="text" 

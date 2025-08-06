@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
-
     caption: {
         type: String,
         default: "",
@@ -22,7 +21,7 @@ const postSchema = new mongoose.Schema({
     comments: [{
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "comment"
+            ref: "Comment"
         }
     }],
 }, {timestamps: true});
