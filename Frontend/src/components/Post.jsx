@@ -20,9 +20,11 @@ export default function Post({ post }) {
 	const [open, setOpen] = useState(false);
 	const { user } = useSelector((store) => store.auth);
 	const { posts } = useSelector((store) => store.post);
-	const dispatch = useDispatch();
 	const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
 	const [likeCount, setLikeCount] = useState(post.likes.length);
+	const [comment, setComment] = useState(post.comments || []);
+
+	const dispatch = useDispatch();
 
 	const chanegEventeHandler = (e) => {
 		const inputText = e.target.value;
@@ -55,9 +57,35 @@ export default function Post({ post }) {
 				toast.success(res.data.message);
 			}
 		} catch (error) {
-			toast.error(error.response?.data?.message);
+			toast.error(error.response?.data?.message || "Error liking post");
 		}
 	};
+	const commentHandler = async () => {
+		try {
+			const res = await axios.post(
+				`http://localhost:8000/api/v1/post/${post?._id}/comment`, { text }, {
+					headers: { "Content-Type": "application/json" 
+					}, withCredentials: true
+				});
+				console.log(res.data);
+			// If the comment is successfully added, update the state and Redux store
+			if (res.data.success) {
+				const updatedCommentsData = [...comment, res.data.message];
+				setComment(updatedCommentsData);
+				// Update the post in the Redux store to reflect the new comments
+				const updatedPostData = posts.map(p =>
+					p._id === post._id ? { ...p, comments: updatedCommentsData } : p
+				);
+				dispatch(setPosts(updatedPostData));
+				setText("");
+				toast.success(res.data.message);
+			}
+			
+		} catch (error) {
+			toast.error(error.response?.data?.message || "Error posting comment");
+			
+		}
+	}
 
 	const deletePostHandler = async () => {
 		try {
@@ -151,7 +179,7 @@ export default function Post({ post }) {
 				onClick={() => setOpen(true)}
 				className="text-sm cursor-pointer text-grey-400"
 			>
-				{post.comments.length} comments{" "}
+				View all {comment.length} comments{" "}
 			</span>
 			<CommentDialog open={open} setOpen={setOpen} />
 			<div className="flex items-center justify-between gap-2 mt-2">
@@ -162,7 +190,7 @@ export default function Post({ post }) {
 					placeholder="Add a comment..."
 					className="outline-none text-sm w-full"
 				/>
-				{text && <span className="text-[#3BADF8]">Post</span>}
+				{text && <span onClick={commentHandler} className="text-[#3BADF8] cursor-pointer">Post</span>}
 			</div>
 		</div>
 	);

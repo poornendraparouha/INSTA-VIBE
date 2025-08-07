@@ -151,17 +151,14 @@ export const addComments = async (req,res) => {
             author:commentingPersonsId,
             post:postId
         })
-        // .populate({path:"author", select:"username profilePicture"});
-
-        const populatedComment = await Comment.findById(comment._id)
-       .populate({ path: "author", select: "username profilePicture" });
+        await comment.populate({path:'author', select:'username profilePicture'});
 
         post.comments.push(comment._id);
         await post.save();
 
         return res.status(201).json({
                 message: "Comment Added Successfully",
-                comment:populatedComment,
+                comment,
                 success: true
             })
         
