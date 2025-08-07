@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
-	HeartIcon,
 	MessageCircle,
 	Send,
 	MoreHorizontal,
 	Bookmark,
 } from "lucide-react";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Button } from "./ui/button";
 import CommentDialog from "./CommentDialog";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,8 @@ export default function Post({ post }) {
 	const { user } = useSelector((store) => store.auth);
 	const { posts } = useSelector((store) => store.post);
 	const dispatch = useDispatch();
+	const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
+	const [likeCount, setLikeCount] = useState(post.likes.length);
 
 	const chanegEventeHandler = (e) => {
 		const inputText = e.target.value;
@@ -30,11 +32,39 @@ export default function Post({ post }) {
 			setText("");
 		}
 	};
+	const likeOrDislikeHandler = async () => {
+		try {
+			const action = liked ? "dislike" : "like";
+			const res = await axios.post(
+				`http://localhost:8000/api/v1/post/${post._id}/${action}`,
+				{},
+				{ withCredentials: true }
+			);
+			if (res.data.success) {
+				const totalLikes = liked ? likeCount - 1 : likeCount + 1;
+				setLikeCount(totalLikes);
+				setLiked(!liked);
+				// Update the post in the Redux store to reflect the new likes
+				const updatedPostData = posts.map((p) =>
+					p._id === post._id ? {
+								...p,
+								likes: liked ? p.likes.filter((id) => id !== user._id) : [...p.likes, user._id],
+						  } : p
+				);
+				dispatch(setPosts(updatedPostData));
+				toast.success(res.data.message);
+			}
+		} catch (error) {
+			toast.error(error.response?.data?.message);
+		}
+	};
 
 	const deletePostHandler = async () => {
 		try {
-			const res = await axios.delete(`http://localhost:8000/api/v1/post/delete/${post?._id}`, { withCredentials: true,
-			});
+			const res = await axios.delete(
+				`http://localhost:8000/api/v1/post/delete/${post?._id}`,
+				{ withCredentials: true }
+			);
 			if (res.data.success) {
 				const updatedPosts = posts.filter((p) => p?._id !== post?._id);
 				dispatch(setPosts(updatedPosts));
@@ -43,7 +73,7 @@ export default function Post({ post }) {
 		} catch (error) {
 			toast.error(error.response?.data?.message || "Error deleting post");
 		}
-	}
+	};
 
 	return (
 		<div className="my-8 w-full max-w-sm mx-auto">
@@ -70,7 +100,11 @@ export default function Post({ post }) {
 							Add to Favorites
 						</Button>
 						{user && user._id === post.author._id && (
-							<Button variant="ghost" onClick={deletePostHandler} className="cursor-pointer w-fit ">
+							<Button
+								variant="ghost"
+								onClick={deletePostHandler}
+								className="cursor-pointer w-fit "
+							>
 								Delete
 							</Button>
 						)}
@@ -84,10 +118,13 @@ export default function Post({ post }) {
 			/>
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex items-center gap-4">
-					<HeartIcon
+					{
+						liked ? <AiFillHeart onClick={likeOrDislikeHandler} size={22}  className="text-red-500" /> : <AiOutlineHeart
+						onClick={likeOrDislikeHandler}
 						size={22}
 						className="cursor-pointer text-gray-700 hover:text-red-500 transition-colors duration-200"
 					/>
+					}
 					<MessageCircle
 						onClick={() => setOpen(true)}
 						size={22}
@@ -104,7 +141,7 @@ export default function Post({ post }) {
 				/>
 			</div>
 			<span className="text-sm font-semibold text-gray-800 tracking-tight mb-2">
-				{post.likes.length} likes
+				{likeCount} likes
 			</span>
 			<p>
 				<span className="font-sm mr-2">{post.author?.username}</span>
