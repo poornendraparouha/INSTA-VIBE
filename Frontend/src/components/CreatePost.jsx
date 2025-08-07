@@ -49,6 +49,9 @@ export default function CreatePost({ open, setOpen }) {
 				dispatch(setPosts([res.data.post, ...posts]));
 				toast.success(res.data.message);
 				setOpen(false);
+				setFile("");
+				setCaption("");
+				setImagePreview("");
 			}
 		} catch (error) {
 			toast.error(error.response?.data?.message);

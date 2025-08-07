@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-	MessageCircle,
-	Send,
-	MoreHorizontal,
-	Bookmark,
-} from "lucide-react";
+import { MessageCircle, Send, MoreHorizontal, Bookmark } from "lucide-react";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Button } from "./ui/button";
 import CommentDialog from "./CommentDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
-import { setPosts } from "@/redux/postSlice";
+import { setPosts, setSelectedPost } from "@/redux/postSlice";
 
 export default function Post({ post }) {
 	const [text, setText] = useState("");
@@ -22,7 +17,7 @@ export default function Post({ post }) {
 	const { posts } = useSelector((store) => store.post);
 	const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
 	const [likeCount, setLikeCount] = useState(post.likes.length);
-	const [comment, setComment] = useState(post.comments || []);
+	const [comment, setComment] = useState(post.comments);
 
 	const dispatch = useDispatch();
 
@@ -48,10 +43,14 @@ export default function Post({ post }) {
 				setLiked(!liked);
 				// Update the post in the Redux store to reflect the new likes
 				const updatedPostData = posts.map((p) =>
-					p._id === post._id ? {
+					p._id === post._id
+						? {
 								...p,
-								likes: liked ? p.likes.filter((id) => id !== user._id) : [...p.likes, user._id],
-						  } : p
+								likes: liked
+									? p.likes.filter((id) => id !== user._id)
+									: [...p.likes, user._id],
+						  }
+						: p
 				);
 				dispatch(setPosts(updatedPostData));
 				toast.success(res.data.message);
@@ -63,29 +62,29 @@ export default function Post({ post }) {
 	const commentHandler = async () => {
 		try {
 			const res = await axios.post(
-				`http://localhost:8000/api/v1/post/${post?._id}/comment`, { text }, {
-					headers: { "Content-Type": "application/json" 
-					}, withCredentials: true
-				});
-				console.log(res.data);
-			// If the comment is successfully added, update the state and Redux store
+				`http://localhost:8000/api/v1/post/${post._id}/comment`,
+				{ text },
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			);
+			console.log(res.data);
 			if (res.data.success) {
-				const updatedCommentsData = [...comment, res.data.message];
+				const updatedCommentsData = [...comment, res.data.comment];
 				setComment(updatedCommentsData);
-				// Update the post in the Redux store to reflect the new comments
-				const updatedPostData = posts.map(p =>
+
+				const updatedPostData = posts.map((p) =>
 					p._id === post._id ? { ...p, comments: updatedCommentsData } : p
 				);
 				dispatch(setPosts(updatedPostData));
-				setText("");
 				toast.success(res.data.message);
+				setText("");
 			}
-			
 		} catch (error) {
 			toast.error(error.response?.data?.message || "Error posting comment");
-			
 		}
-	}
+	};
 
 	const deletePostHandler = async () => {
 		try {
@@ -146,15 +145,24 @@ export default function Post({ post }) {
 			/>
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex items-center gap-4">
-					{
-						liked ? <AiFillHeart onClick={likeOrDislikeHandler} size={22}  className="text-red-500" /> : <AiOutlineHeart
-						onClick={likeOrDislikeHandler}
-						size={22}
-						className="cursor-pointer text-gray-700 hover:text-red-500 transition-colors duration-200"
-					/>
-					}
+					{liked ? (
+						<AiFillHeart
+							onClick={likeOrDislikeHandler}
+							size={22}
+							className="text-red-500"
+						/>
+					) : (
+						<AiOutlineHeart
+							onClick={likeOrDislikeHandler}
+							size={22}
+							className="cursor-pointer text-gray-700 hover:text-red-500 transition-colors duration-200"
+						/>
+					)}
 					<MessageCircle
-						onClick={() => setOpen(true)}
+						onClick={() => {
+							dispatch(setSelectedPost(post));
+							setOpen(true);
+						}}
 						size={22}
 						className="cursor-pointer text-gray-700 hover:text-blue-500 transition-colors duration-200"
 					/>
@@ -175,12 +183,15 @@ export default function Post({ post }) {
 				<span className="font-sm mr-2">{post.author?.username}</span>
 				{post.caption}
 			</p>
-			<span
-				onClick={() => setOpen(true)}
-				className="text-sm cursor-pointer text-grey-400"
-			>
-				View all {comment.length} comments{" "}
-			</span>
+			{comment.length > 0 && (
+				<span onClick={() => {
+						dispatch(setSelectedPost(post));
+						setOpen(true);
+					}}
+					className="text-sm cursor-pointer text-grey-400" >
+					View all {comment.length} comments
+				</span>
+			)}
 			<CommentDialog open={open} setOpen={setOpen} />
 			<div className="flex items-center justify-between gap-2 mt-2">
 				<input
@@ -190,7 +201,14 @@ export default function Post({ post }) {
 					placeholder="Add a comment..."
 					className="outline-none text-sm w-full"
 				/>
-				{text && <span onClick={commentHandler} className="text-[#3BADF8] cursor-pointer">Post</span>}
+				{text && (
+					<span
+						onClick={commentHandler}
+						className="text-[#3BADF8] cursor-pointer"
+					>
+						Post
+					</span>
+				)}
 			</div>
 		</div>
 	);
