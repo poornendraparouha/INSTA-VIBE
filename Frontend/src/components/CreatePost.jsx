@@ -70,7 +70,7 @@ export default function CreatePost({ open, setOpen }) {
 					</Avatar>
 					<div>
 						<h1 className="font-semibold text-xs">{user?.username}</h1>
-						<span className="text-xs text-grey-600">Bio here...</span>
+						<span className="text-xs text-grey-600">{user?.bio}</span>
 					</div>
 				</div>
 				<Textarea
