@@ -46,6 +46,8 @@ function LeftSidebar() {
 			logoutHandler();
 		}else if(textType === "Create") {
 			setOpen(true);
+		}else if (textType === "Profile") {
+			navigate(`/profile/${user?._id}`);
 		}
 	};
 	const sidebarItems = [

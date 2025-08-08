@@ -48,9 +48,9 @@ export const addNewPost = async (req, res) => {
 
 export const getAllPost = async (req, res) => {
     try {
-        const posts = await Post.find().sort({createAt:-1})
+        const posts = await Post.find().sort({ createdAt: -1})
         .populate({path:'author', select:'username profilePicture'})
-        .populate({path:'comments', sort:{createAt:-1}, populate:{path:'author', select:'username profilePicture'}
+        .populate({path:'comments', options: { sort: { createdAt: -1 } }, populate:{path:'author', select:'username profilePicture'}
         })
         return res.status(200).json({
                 message:"All Posts Fatched Successfully",
@@ -66,8 +66,8 @@ export const getAllPost = async (req, res) => {
 export const getUserPost = async (req, res) => {
     try {
         const authorId = req.id;
-        const posts = await Post.find({author:authorId}).sort({createAt:-1}).populate({path:"author", select:"username profilePicture"
-        }).populate({path:'comments', sort:{createAt:-1}, populate:{path:'author', select:'username profilePicture'}
+        const posts = await Post.find({author:authorId}).sort({createdAt: -1}).populate({path:"author", select:"username profilePicture"
+        }).populate({path:'comments', options: { sort: { createdAt: -1 } }, populate:{path:'author',  select:'username profilePicture'}
         });
         return res.status(200).json({
                 posts,
@@ -170,7 +170,7 @@ export const addComments = async (req,res) => {
 export const getCommentsOfPost = async (req, res) => {
     try {
         const postId = req.params.id;
-        const comments = await Comment.find({post:postId}).populate('author', 'username profilePicture');
+        const comments = await Comment.find({post:postId}).sort({ createdAt: -1 }).populate('author', 'username profilePicture');
         if(!comments) {
             return res.status(404).json({
                 message: "Comments Not Found",
