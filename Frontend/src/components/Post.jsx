@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
+import { Badge } from "./ui/badge";
 
 export default function Post({ post }) {
 	const [text, setText] = useState("");
@@ -110,7 +111,10 @@ export default function Post({ post }) {
 						<AvatarImage src={post.author?.profilePicture} alt="post_image" />
 						<AvatarFallback>CN</AvatarFallback>
 					</Avatar>
-					<h1>{post.author?.username}</h1>
+					<div className="flex items-center gap-3">
+						<h1 className="font-semibold text-sm">{post.author?.username}</h1>
+						{user?._id === post.author?._id && <Badge variant="secondary"> Author </Badge>}
+					</div>
 				</div>
 				<Dialog>
 					<DialogTrigger asChild>

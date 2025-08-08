@@ -13,6 +13,8 @@ import { setPosts } from "@/redux/postSlice";
 export default function CommentDialog({ open, setOpen }) {
 	const [text, setText] = useState("");
 	const { selectedPost, posts } = useSelector((store) => store.post);
+		const { user } = useSelector((store) => store.auth);
+
 	const [comment, setComment] = useState([]);
 
 	const dispatch = useDispatch();
@@ -117,7 +119,7 @@ export default function CommentDialog({ open, setOpen }) {
 										<Link to="/profile" className="font-semibold text-sm">
 											{selectedPost?.author?.username}
 										</Link>
-										{/* <span className="text-xs text-gray-600">Bio here...</span> */}
+										<span className="text-xs text-gray-600">{user?.bio || "No bio available"}</span>
 									</div>
 								</div>
 
