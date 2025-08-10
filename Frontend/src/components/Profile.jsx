@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useGetUserProfile from "@/hooks/useGetUserProfile";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -12,8 +12,8 @@ function Profile() {
 	useGetUserProfile(userId);
 	const [activeTab, setActiveTab] = useState("posts");
 
-	const { userProfile } = useSelector((store) => store.auth);
-	const isLoggedInUserProfile = true;
+	const { userProfile, user } = useSelector((store) => store.auth);
+	const isLoggedInUserProfile = user?._id === userProfile?._id;
 	const isFollowing = true;
 
 	const handleTabChange = (tab) => {
@@ -33,46 +33,49 @@ function Profile() {
 						</Avatar>
 					</section>
 					<section>
-						<div className="flex flex-col gap-6">
-							<div className="flex items-center justify-between gap-2">
+						<div className="flex flex-col gap-5">
+							<div className="flex items-center gap-4">
 								<span className="font-bold">{userProfile?.username}</span>
 								{isLoggedInUserProfile ? (
 									<>
+									<Link to="/account/edit">
 										<Button
-											variant="secondry"
+											variant="secondary"
 											className="hover:bg-grey-200 h-8"
 										>
 											Edit Profile
 										</Button>
+									</Link>
 										<Button
-											variant="secondry"
+											variant="secondary"
 											className="hover:bg-grey-200 h-8"
 										>
 											View Archive
 										</Button>
 										<Button
-											variant="secondry"
+											variant="secondary"
 											className="hover:bg-grey-200 h-8"
 										>
 											Ad Tools
 										</Button>
 									</>
 								) : isFollowing ? (
-									<>
-										<Button variant="secondry" className=" bg-[#72c3f8] h-8">
+										<Button variant="secondary" className=" bg-[#72c3f8] h-8">
 											{" "}
-											Unfollow{" "}
+											Follow{" "}
 										</Button>
-										<Button variant="secondry" className="bg-[#72c3f8] h-8">
+								) : (
+									<>
+									<Button className=" bg-[#0095F6] hover:bg-[#3192d2] h-8">
+										{" "}
+										Unfollow{" "}
+									</Button>
+									<Button variant="secondary" className="bg-[#72c3f8] h-8">
 											{" "}
 											Message{" "}
 										</Button>
-									</>
-								) : (
-									<Button className=" bg-[#0095F6] hover:bg-[#3192d2] h-8">
-										{" "}
-										Follow{" "}
-									</Button>
+										</>
+									
 								)}
 							</div>
 							<div className="flex items-center gap-10">

@@ -19,8 +19,7 @@ export default function Post({ post }) {
 	const { posts } = useSelector((store) => store.post);
 	const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
 	const [likeCount, setLikeCount] = useState(post.likes.length);
-	// const [comment, setComment] = useState(post.comments);
-		const [comment, setComment] = useState(post.comments);
+	const [comment, setComment] = useState(post.comments);
 
 
 	const dispatch = useDispatch();
@@ -110,14 +109,14 @@ export default function Post({ post }) {
 		<div className="my-8 w-full max-w-sm mx-auto">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					<Link to={`/profile/${user?._id}`}>
+					<Link to={`/profile/${post?.author?._id}`}>
 					<Avatar>
 						<AvatarImage src={post.author?.profilePicture} alt="post_image" />
 						<AvatarFallback>CN</AvatarFallback>
 					</Avatar>
 					</Link>
 					<div className="flex items-center gap-3">
-						<Link to={`/profile/${user?._id}`}><h1 className="font-semibold text-sm">{post.author?.username}</h1></Link>
+						<Link to={`/profile/${post?.author?._id}`}><h1 className="font-semibold text-sm">{post.author?.username}</h1></Link>
 						{user?._id === post.author?._id && <Badge variant="secondary"> Author </Badge>}
 					</div>
 				</div>
