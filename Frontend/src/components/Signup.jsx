@@ -22,16 +22,12 @@ export default function Signup() {
 		e.preventDefault();
 		try {
 			setLoading(true);
-			const res = await axios.post(
-				"http://localhost:8000/api/v1/user/register",
-				input,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-					withCredentials: true,
-				}
-			);
+			const res = await axios.post("http://localhost:8000/api/v1/user/register", input, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+				withCredentials: true,
+			});
 			if (res.data.success) {
 				navigate("/login");
 				toast.success(res.data.message);
@@ -50,15 +46,10 @@ export default function Signup() {
 	};
 	return (
 		<div className="flex items-center w-screen h-screen justify-center">
-			<form
-				onSubmit={signupHandler}
-				className="shadow-lg flex flex-col gap-5 p-8"
-			>
+			<form onSubmit={signupHandler} className="shadow-lg flex flex-col gap-5 p-8">
 				<div className="my-4">
 					<h1 className="text-center font-bold text-xl">LOGO</h1>
-					<p className="text-sm text-center">
-						Signup to see photos and vidios from your friends
-					</p>
+					<p className="text-sm text-center">Signup to see photos and vidios from your friends</p>
 				</div>
 				<div>
 					<Label className="font-medium " htmlFor="username">

@@ -1,16 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authSlice from "./authSlice";
 import postSlice from "./postSlice";
-import chatSlice from "./chatSlice"
-import {
-    persistReducer,
-	FLUSH,
-	REHYDRATE,
-	PAUSE,
-	PERSIST,
-	PURGE,
-	REGISTER,
-} from "redux-persist";
+import chatSlice from "./chatSlice";
+import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
@@ -19,10 +11,10 @@ const persistConfig = {
 	storage,
 };
 const rootReducer = combineReducers({
-    auth: authSlice,
+	auth: authSlice,
 	post: postSlice,
-	chat: chatSlice
-})
+	chat: chatSlice,
+});
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

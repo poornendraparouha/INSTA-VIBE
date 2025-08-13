@@ -1,13 +1,4 @@
-import {
-	Heart,
-	Home,
-	LogOutIcon,
-	MessageCircle,
-	PlusSquare,
-	Search,
-	Sidebar,
-	TrendingUp,
-} from "lucide-react";
+import { Heart, Home, LogOutIcon, MessageCircle, PlusSquare, Search, Sidebar, TrendingUp } from "lucide-react";
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "/instagram.png";
@@ -44,12 +35,12 @@ function LeftSidebar() {
 	const sidebarHandler = (textType) => {
 		if (textType === "Logout") {
 			logoutHandler();
-		}else if(textType === "Create") {
+		} else if (textType === "Create") {
 			setOpen(true);
-		}else if (textType === "Profile") {
+		} else if (textType === "Profile") {
 			navigate(`/profile/${user?._id}`);
-		}else if(textType === "Home") {
-			navigate("/")
+		} else if (textType === "Home") {
+			navigate("/");
 		}
 	};
 	const sidebarItems = [
@@ -86,9 +77,7 @@ function LeftSidebar() {
 							className="flex items-center gap-3 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer relative"
 						>
 							{item.icon}
-							<span className="text-sm font-medium text-gray-800">
-								{item.text}
-							</span>
+							<span className="text-sm font-medium text-gray-800">{item.text}</span>
 						</div>
 					);
 				})}

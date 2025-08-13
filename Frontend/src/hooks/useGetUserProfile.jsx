@@ -5,14 +5,13 @@ import { setUserProfile } from "@/redux/authSlice";
 
 const useGetUserProfile = (userId) => {
 	const dispatch = useDispatch();
-    // const [userProfile, setUserProfile] = useState(null);
+	// const [userProfile, setUserProfile] = useState(null);
 	useEffect(() => {
 		const fetchUserProfile = async () => {
 			try {
-				const response = await axios.get(
-					`http://localhost:8000/api/v1/user/${userId}/profile`,
-					{ withCredentials: true }
-				);
+				const response = await axios.get(`http://localhost:8000/api/v1/user/${userId}/profile`, {
+					withCredentials: true,
+				});
 				if (response.data.success) {
 					dispatch(setUserProfile(response.data.user));
 				}

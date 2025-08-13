@@ -15,7 +15,7 @@ export default function Login() {
 		password: "",
 	});
 	const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const changeEventHandeler = (e) => {
@@ -25,19 +25,15 @@ export default function Login() {
 		e.preventDefault();
 		try {
 			setLoading(true);
-			const res = await axios.post(
-				"http://localhost:8000/api/v1/user/login",
-				input,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-					withCredentials: true,
-				}
-			);
+			const res = await axios.post("http://localhost:8000/api/v1/user/login", input, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+				withCredentials: true,
+			});
 			if (res.data.success) {
 				dispatch(setAuthUser(res.data.user));
-                navigate("/")
+				navigate("/");
 				toast.success(res.data.message);
 				setInput({
 					email: "",
@@ -53,10 +49,7 @@ export default function Login() {
 	};
 	return (
 		<div className="flex items-center w-screen h-screen justify-center">
-			<form
-				onSubmit={signupHandler}
-				className="shadow-lg flex flex-col gap-5 p-8"
-			>
+			<form onSubmit={signupHandler} className="shadow-lg flex flex-col gap-5 p-8">
 				<div className="my-4">
 					<h1 className="text-center font-bold text-xl">LOGO</h1>
 					<p className="text-sm text-center">Login to use my instagram clone</p>
@@ -94,7 +87,7 @@ export default function Login() {
 						PLease wait
 					</Button>
 				) : (
-					<Button type-="submit" >Login</Button>
+					<Button type-="submit">Login</Button>
 				)}
 				<span className="text-center">
 					Don&apos;t have an account?{" "}

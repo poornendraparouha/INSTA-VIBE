@@ -13,7 +13,7 @@ import { setPosts } from "@/redux/postSlice";
 export default function CommentDialog({ open, setOpen }) {
 	const [text, setText] = useState("");
 	const { selectedPost, posts } = useSelector((store) => store.post);
-		const { user } = useSelector((store) => store.auth);
+	const { user } = useSelector((store) => store.auth);
 
 	const [comment, setComment] = useState([]);
 
@@ -28,19 +28,16 @@ export default function CommentDialog({ open, setOpen }) {
 		if (open && selectedPost?._id) {
 			const fetchComments = async () => {
 				try {
-					const res = await axios.get(
-						`http://localhost:8000/api/v1/post/${selectedPost._id}/comment/all`,
-						{ withCredentials: true }
-					);
+					const res = await axios.get(`http://localhost:8000/api/v1/post/${selectedPost._id}/comment/all`, {
+						withCredentials: true,
+					});
 					if (res.data.success) {
 						setComment(res.data.comments);
 					} else {
 						toast.error(res.data.message || "Failed to load comments");
 					}
 				} catch (error) {
-					toast.error(
-						error.response?.data?.message || "Error fatching comment"
-					);
+					toast.error(error.response?.data?.message || "Error fatching comment");
 				}
 			};
 			fetchComments();
@@ -72,9 +69,7 @@ export default function CommentDialog({ open, setOpen }) {
 				setComment(updatedCommentsData);
 
 				const updatedPostData = posts.map((p) =>
-					p._id === selectedPost._id
-						? { ...p, comments: updatedCommentsData }
-						: p
+					p._id === selectedPost._id ? { ...p, comments: updatedCommentsData } : p
 				);
 				dispatch(setPosts(updatedPostData));
 				toast.success(res.data.message);
@@ -94,11 +89,7 @@ export default function CommentDialog({ open, setOpen }) {
 					<div className="flex flex-1">
 						{/* Left image */}
 						<div className="w-1/2">
-							<img
-								src={selectedPost?.image}
-								alt="post_image"
-								className="rounded-l-lg w-full h-full object-cover"
-							/>
+							<img src={selectedPost?.image} alt="post_image" className="rounded-l-lg w-full h-full object-cover" />
 						</div>
 
 						{/* Right section */}
@@ -108,10 +99,7 @@ export default function CommentDialog({ open, setOpen }) {
 								<div className="flex items-center gap-3">
 									<Link to="/profile">
 										<Avatar>
-											<AvatarImage
-												src={selectedPost?.author?.profilePicture}
-												alt="profile_picture"
-											/>
+											<AvatarImage src={selectedPost?.author?.profilePicture} alt="profile_picture" />
 											<AvatarFallback>CN</AvatarFallback>
 										</Avatar>
 									</Link>
@@ -129,12 +117,8 @@ export default function CommentDialog({ open, setOpen }) {
 										<MoreHorizontal className="cursor-pointer" />
 									</DialogTrigger>
 									<DialogContent className="flex flex-col items-center gap-2 text-sm text-center bg-white p-4 rounded-md shadow-md z-50 w-48">
-										<div className="cursor-pointer w-full text-[#ED4956] font-bold">
-											Unfollow
-										</div>
-										<div className="cursor-pointer w-full text-gray-700">
-											Add to Favorites
-										</div>
+										<div className="cursor-pointer w-full text-[#ED4956] font-bold">Unfollow</div>
+										<div className="cursor-pointer w-full text-gray-700">Add to Favorites</div>
 									</DialogContent>
 								</Dialog>
 							</div>
@@ -154,11 +138,7 @@ export default function CommentDialog({ open, setOpen }) {
 										placeholder="Add a comment..."
 										className="w-full text-sm outline-none border border-gray-300 p-2 rounded"
 									/>
-									<Button
-										disabled={!text.trim()}
-										onClick={sendMessageHandler}
-										variant="outline"
-									>
+									<Button disabled={!text.trim()} onClick={sendMessageHandler} variant="outline">
 										Add comment
 									</Button>
 								</div>

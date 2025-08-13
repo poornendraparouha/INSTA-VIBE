@@ -21,17 +21,13 @@ function Messages({ selectedUser }) {
 				</div>
 			</div>
 			<div className="flex flex-col gap-3">
-				{
-                    [1, 2, 3, 4].map((msg) => {
+				{[1, 2, 3, 4].map((msg) => {
 					return (
-                        <div className={`flex`}>
-                            <div>
-                                {msg}
-                            </div>
-                        </div>
-                    )
-				})
-                }
+						<div className={`flex`}>
+							<div>{msg}</div>
+						</div>
+					);
+				})}
 			</div>
 		</div>
 	);

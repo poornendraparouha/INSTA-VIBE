@@ -19,8 +19,7 @@ function Profile() {
 	const handleTabChange = (tab) => {
 		setActiveTab(tab);
 	};
-	const displayedPost =
-		activeTab === "posts" ? userProfile?.posts : userProfile?.bookmarks;
+	const displayedPost = activeTab === "posts" ? userProfile?.posts : userProfile?.bookmarks;
 
 	return (
 		<div className="flex max-w-5xl justify-center mx-auto pl-10">
@@ -38,66 +37,44 @@ function Profile() {
 								<span className="font-bold">{userProfile?.username}</span>
 								{isLoggedInUserProfile ? (
 									<>
-									<Link to="/account/edit">
-										<Button
-											variant="secondary"
-											className="hover:bg-grey-200 h-8"
-										>
-											Edit Profile
-										</Button>
-									</Link>
-										<Button
-											variant="secondary"
-											className="hover:bg-grey-200 h-8"
-										>
+										<Link to="/account/edit">
+											<Button variant="secondary" className="hover:bg-grey-200 h-8">
+												Edit Profile
+											</Button>
+										</Link>
+										<Button variant="secondary" className="hover:bg-grey-200 h-8">
 											View Archive
 										</Button>
-										<Button
-											variant="secondary"
-											className="hover:bg-grey-200 h-8"
-										>
+										<Button variant="secondary" className="hover:bg-grey-200 h-8">
 											Ad Tools
 										</Button>
 									</>
 								) : isFollowing ? (
-										<Button variant="secondary" className=" bg-[#72c3f8] h-8">
-											{" "}
-											Follow{" "}
-										</Button>
+									<Button variant="secondary" className=" bg-[#72c3f8] h-8">
+										{" "}
+										Follow{" "}
+									</Button>
 								) : (
 									<>
-									<Button className=" bg-[#0095F6] hover:bg-[#3192d2] h-8">
-										{" "}
-										Unfollow{" "}
-									</Button>
-									<Button variant="secondary" className="bg-[#72c3f8] h-8">
+										<Button className=" bg-[#0095F6] hover:bg-[#3192d2] h-8"> Unfollow </Button>
+										<Button variant="secondary" className="bg-[#72c3f8] h-8">
 											{" "}
 											Message{" "}
 										</Button>
-										</>
-									
+									</>
 								)}
 							</div>
 							<div className="flex items-center gap-10">
 								<p>
-									<span className="font-bold">
-										{userProfile?.posts?.length}
-									</span>{" "}
-									Posts{" "}
+									<span className="font-bold">{userProfile?.posts?.length}</span> Posts{" "}
 								</p>
 								<p>
 									{" "}
-									<span className="font-bold">
-										{userProfile?.followers?.length}
-									</span>{" "}
-									Followers{" "}
+									<span className="font-bold">{userProfile?.followers?.length}</span> Followers{" "}
 								</p>
 								<p>
 									{" "}
-									<span className="font-bold">
-										{userProfile?.following?.length}
-									</span>{" "}
-									Following{" "}
+									<span className="font-bold">{userProfile?.following?.length}</span> Following{" "}
 								</p>
 							</div>
 							<div className="flex flex-col gap-2">
@@ -106,9 +83,7 @@ function Profile() {
 									<AtSign />
 									<span>{userProfile?.username}</span>
 								</Badge>
-								<span className="font-semibold">
-									{userProfile?.bio || "No bio available"}
-								</span>
+								<span className="font-semibold">{userProfile?.bio || "No bio available"}</span>
 								<span>I am a full stack developer</span>
 								<span>I am making a clone of Instagram</span>
 							</div>
@@ -121,49 +96,58 @@ function Profile() {
 							onClick={() => {
 								handleTabChange("posts");
 							}}
-							className={`py--3 cursor-pointer ${
-								activeTab === "posts" ? "font-bold" : ""
-							}`}
+							className={`py--3 cursor-pointer ${activeTab === "posts" ? "font-bold" : ""}`}
 						>
 							POSTS
 						</span>
-						<span onClick={() => {handleTabChange("reels")}} className={`py--3 cursor-pointer ${activeTab === "reels" ? "font-bold" : ""}`}>REELS</span>
+						<span
+							onClick={() => {
+								handleTabChange("reels");
+							}}
+							className={`py--3 cursor-pointer ${activeTab === "reels" ? "font-bold" : ""}`}
+						>
+							REELS
+						</span>
 						<span
 							onClick={() => {
 								handleTabChange("saved");
 							}}
-							className={`py--3 cursor-pointer ${
-								activeTab === "saved" ? "font-bold" : ""
-							}`}
+							className={`py--3 cursor-pointer ${activeTab === "saved" ? "font-bold" : ""}`}
 						>
 							SAVED
 						</span>
-						<span onClick={() => {handleTabChange("tagged")}} className={`py--3 cursor-pointer ${activeTab === "tagged" ? "font-bold" : ""}`}>TAGGED</span>
+						<span
+							onClick={() => {
+								handleTabChange("tagged");
+							}}
+							className={`py--3 cursor-pointer ${activeTab === "tagged" ? "font-bold" : ""}`}
+						>
+							TAGGED
+						</span>
 					</div>
-          <div className="grid grid-cols-3 gap-2">
-            {displayedPost?.map((post) => (
-              <div key={post?._id} className="group relative cursor-pointer overflow-hidden">
-                <img
-                  src={post?.image}
-                  alt={post?.caption}
-                  className="object-cover w-full h-full rounded-sm my-2 aspect-[4/5] transition duration-300 group-hover:blur-sm"
-                />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded">
-                  <div className="flex text-white items-center space-x-4">
-                    <button className="flex items-center gap-2 hover:text-grey-300">
-                      <Heart/>
-                      <span>{post?.likes.length}</span>
-                    </button>
-                    <button className="flex items-center gap-2 hover:text-grey-300">
-                      <MessageCircle/>
-                      <span>{post?.comments.length}</span>
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-            ))}
-          </div>
+					<div className="grid grid-cols-3 gap-2">
+						{displayedPost?.map((post) => (
+							<div key={post?._id} className="group relative cursor-pointer overflow-hidden">
+								<img
+									src={post?.image}
+									alt={post?.caption}
+									className="object-cover w-full h-full rounded-sm my-2 aspect-[4/5] transition duration-300 group-hover:blur-sm"
+								/>
+								<div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded">
+									<div className="flex text-white items-center space-x-4">
+										<button className="flex items-center gap-2 hover:text-grey-300">
+											<Heart />
+											<span>{post?.likes.length}</span>
+										</button>
+										<button className="flex items-center gap-2 hover:text-grey-300">
+											<MessageCircle />
+											<span>{post?.comments.length}</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
 				</div>
 			</div>
 		</div>

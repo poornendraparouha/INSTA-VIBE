@@ -35,16 +35,12 @@ export default function CreatePost({ open, setOpen }) {
 		if (imagePreview) formData.append("image", file);
 		try {
 			setLoading(true);
-			const res = await axios.post(
-				"http://localhost:8000/api/v1/post/addpost",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-					withCredentials: true,
-				}
-			);
+			const res = await axios.post("http://localhost:8000/api/v1/post/addpost", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				withCredentials: true,
+			});
 			if (res.data.success) {
 				dispatch(setPosts([res.data.post, ...posts]));
 				toast.success(res.data.message);
@@ -63,9 +59,7 @@ export default function CreatePost({ open, setOpen }) {
 	return (
 		<Dialog open={open}>
 			<DialogContent onInteractOutside={() => setOpen(false)}>
-				<DialogHeader className="font-semibold text-center">
-					Create New Post
-				</DialogHeader>
+				<DialogHeader className="font-semibold text-center">Create New Post</DialogHeader>
 				<div className="flex gap-3 items-center">
 					<Avatar>
 						<AvatarImage src={user?.profilePicture} alt="post_image" />
@@ -84,20 +78,11 @@ export default function CreatePost({ open, setOpen }) {
 				/>
 				{imagePreview && (
 					<div className="w-full h-64 flex items-center justify-center">
-						<img
-							src={imagePreview}
-							alt="preview_image"
-							className="object-cover h-full w-full rounded-md"
-						/>
+						<img src={imagePreview} alt="preview_image" className="object-cover h-full w-full rounded-md" />
 					</div>
 				)}
 
-				<input
-					ref={imageRef}
-					type="file"
-					className="hidden"
-					onChange={fileChangeHandler}
-				/>
+				<input ref={imageRef} type="file" className="hidden" onChange={fileChangeHandler} />
 				<Button
 					onClick={() => imageRef.current.click()}
 					type="submit"
@@ -112,11 +97,7 @@ export default function CreatePost({ open, setOpen }) {
 							Please wait
 						</Button>
 					) : (
-						<Button
-							onClick={createPostHandler}
-							type="submit"
-							className="w-full"
-						>
+						<Button onClick={createPostHandler} type="submit" className="w-full">
 							Post
 						</Button>
 					))}

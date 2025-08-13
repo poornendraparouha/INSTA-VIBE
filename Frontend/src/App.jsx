@@ -23,12 +23,12 @@ const browserRouter = createBrowserRouter([
 			},
 			{
 				path: "/account/edit",
-				element: <EditProfile />
+				element: <EditProfile />,
 			},
 			{
 				path: "/chat",
-				element: <ChatPage />
-			}
+				element: <ChatPage />,
+			},
 		],
 	},
 	{

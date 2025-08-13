@@ -21,7 +21,6 @@ export default function Post({ post }) {
 	const [likeCount, setLikeCount] = useState(post.likes.length);
 	const [comment, setComment] = useState(post.comments);
 
-
 	const dispatch = useDispatch();
 
 	const chanegEventeHandler = (e) => {
@@ -49,9 +48,7 @@ export default function Post({ post }) {
 					p._id === post._id
 						? {
 								...p,
-								likes: liked
-									? p.likes.filter((id) => id !== user._id)
-									: [...p.likes, user._id],
+								likes: liked ? p.likes.filter((id) => id !== user._id) : [...p.likes, user._id],
 						  }
 						: p
 				);
@@ -77,9 +74,7 @@ export default function Post({ post }) {
 				const updatedCommentsData = [...comment, res.data.comment];
 				setComment(updatedCommentsData);
 
-				const updatedPostData = posts.map((p) =>
-					p._id === post._id ? { ...p, comments: updatedCommentsData } : p
-				);
+				const updatedPostData = posts.map((p) => (p._id === post._id ? { ...p, comments: updatedCommentsData } : p));
 				dispatch(setPosts(updatedPostData));
 				toast.success(res.data.message);
 				setText("");
@@ -91,10 +86,9 @@ export default function Post({ post }) {
 
 	const deletePostHandler = async () => {
 		try {
-			const res = await axios.delete(
-				`http://localhost:8000/api/v1/post/delete/${post?._id}`,
-				{ withCredentials: true }
-			);
+			const res = await axios.delete(`http://localhost:8000/api/v1/post/delete/${post?._id}`, {
+				withCredentials: true,
+			});
 			if (res.data.success) {
 				const updatedPosts = posts.filter((p) => p?._id !== post?._id);
 				dispatch(setPosts(updatedPosts));
@@ -110,13 +104,15 @@ export default function Post({ post }) {
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
 					<Link to={`/profile/${post?.author?._id}`}>
-					<Avatar>
-						<AvatarImage src={post.author?.profilePicture} alt="post_image" />
-						<AvatarFallback>CN</AvatarFallback>
-					</Avatar>
+						<Avatar>
+							<AvatarImage src={post.author?.profilePicture} alt="post_image" />
+							<AvatarFallback>CN</AvatarFallback>
+						</Avatar>
 					</Link>
 					<div className="flex items-center gap-3">
-						<Link to={`/profile/${post?.author?._id}`}><h1 className="font-semibold text-sm">{post.author?.username}</h1></Link>
+						<Link to={`/profile/${post?.author?._id}`}>
+							<h1 className="font-semibold text-sm">{post.author?.username}</h1>
+						</Link>
 						{user?._id === post.author?._id && <Badge variant="secondary"> Author </Badge>}
 					</div>
 				</div>
@@ -125,40 +121,25 @@ export default function Post({ post }) {
 						<MoreHorizontal className="cursor-pointer" />
 					</DialogTrigger>
 					<DialogContent className="flex flex-col items-center text-sm text-center">
-						<Button
-							variant="ghost"
-							className="cursor-pointer w-fit text-[#ED4956] font-bold"
-						>
+						<Button variant="ghost" className="cursor-pointer w-fit text-[#ED4956] font-bold">
 							Unfollow
 						</Button>
 						<Button variant="ghost" className="cursor-pointer w-fit ">
 							Add to Favorites
 						</Button>
 						{user && user._id === post.author._id && (
-							<Button
-								variant="ghost"
-								onClick={deletePostHandler}
-								className="cursor-pointer w-fit "
-							>
+							<Button variant="ghost" onClick={deletePostHandler} className="cursor-pointer w-fit ">
 								Delete
 							</Button>
 						)}
 					</DialogContent>
 				</Dialog>
 			</div>
-			<img
-				className="rounded-sm my-2 w-full aspect-square object-cover"
-				src={post.image}
-				alt="post_image"
-			/>
+			<img className="rounded-sm my-2 w-full aspect-square object-cover" src={post.image} alt="post_image" />
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex items-center gap-4">
 					{liked ? (
-						<AiFillHeart
-							onClick={likeOrDislikeHandler}
-							size={22}
-							className="text-red-500"
-						/>
+						<AiFillHeart onClick={likeOrDislikeHandler} size={22} className="text-red-500" />
 					) : (
 						<AiOutlineHeart
 							onClick={likeOrDislikeHandler}
@@ -184,19 +165,19 @@ export default function Post({ post }) {
 					className="cursor-pointer text-gray-700 hover:text-yellow-500 transition-colors duration-200"
 				/>
 			</div>
-			<span className="text-sm font-semibold text-gray-800 tracking-tight mb-2">
-				{likeCount} likes
-			</span>
+			<span className="text-sm font-semibold text-gray-800 tracking-tight mb-2">{likeCount} likes</span>
 			<p>
 				<span className="font-sm mr-2">{post.author?.username}</span>
 				{post.caption}
 			</p>
 			{comment.length > 0 && (
-				<span onClick={() => {
+				<span
+					onClick={() => {
 						dispatch(setSelectedPost(post));
 						setOpen(true);
 					}}
-					className="text-sm cursor-pointer text-grey-400" >
+					className="text-sm cursor-pointer text-grey-400"
+				>
 					View all {comment.length} comments
 				</span>
 			)}
@@ -210,10 +191,7 @@ export default function Post({ post }) {
 					className="outline-none text-sm w-full"
 				/>
 				{text && (
-					<span
-						onClick={commentHandler}
-						className="text-[#3BADF8] cursor-pointer"
-					>
+					<span onClick={commentHandler} className="text-[#3BADF8] cursor-pointer">
 						Post
 					</span>
 				)}
