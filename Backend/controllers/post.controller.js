@@ -96,11 +96,25 @@ export const likePost = async (req, res) => {
 			});
 		}
 		// Like Logic
-		// await post.update({$addToSet:{likes:likingPersonsUserId}});
+		// await post.updateOne({$addToSet:{likes:likingPersonsUserId}});
 		// await post.save();
 		await Post.findByIdAndUpdate(postId, { $addToSet: { likes: likingPersonsUserId } });
 
 		// implement socket io for realtime notification
+		const user = await User.findById(likingPersonsUserId).select("username profilePicture");
+		const postOwnerId = post.author.toString();
+		if (postOwnerId !== likingPersonsUserId) {
+			// emit notification event
+			const notification = {
+				type: "like",
+				userId: likingPersonsUserId,
+				userDetails: user,
+				postId,
+				message: "Your Post was liked",
+			};
+			const postOwnerSocketId = getReceierSocketId(postOwnerId);
+			io.to(postOwnerSocketId).emit("notification", notification);
+		}
 
 		return res.status(200).json({
 			message: "Post Liked",
@@ -123,9 +137,25 @@ export const dislikePost = async (req, res) => {
 			});
 		}
 		// Like Logic
-		// await post.update({$pull:{likes:likingPersonsId}});
+		// await post.updateOne({$pull:{likes:likingPersonsId}});
 		// await post.save();
 		await Post.findByIdAndUpdate(postId, { $pull: { likes: likingPersonsId } });
+
+		//socket implementation for realtime updates
+		const user = await User.findById(likingPersonsId).select("username profilePicture");
+		const postOwnerId = post.author.toString();
+		if (postOwnerId !== likingPersonsId) {
+			// emit notification event
+			const notification = {
+				type: "dislike",
+				userId: likingPersonsId,
+				userDetails: user,
+				postId,
+				message: "Your Post was disliked",
+			};
+			const postOwnerSocketId = getReceierSocketId(postOwnerId);
+			io.to(postOwnerSocketId).emit("notification", notification);
+		}
 
 		return res.status(200).json({
 			message: "Post Disliked",
