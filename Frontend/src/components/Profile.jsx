@@ -22,7 +22,7 @@ function Profile() {
 	const displayedPost = activeTab === "posts" ? userProfile?.posts : userProfile?.bookmarks;
 
 	return (
-		<div className="flex max-w-5xl justify-center mx-auto pl-10">
+		<div className="flex max-w-5xl justify-center mx-auto pl-[4%]">
 			<div className="flex flex-col gap-2 p-8">
 				<div className="grid grid-cols-2">
 					<section className="flex items-center justify-center">
@@ -84,14 +84,14 @@ function Profile() {
 									<span>{userProfile?.username}</span>
 								</Badge>
 								<span className="font-semibold">{userProfile?.bio || "No bio available"}</span>
-								<span>I am a full stack developer</span>
-								<span>I am making a clone of Instagram</span>
+								{/* <span>I am a full stack developer</span> */}
+								{/* <span>I am making a clone of Instagram</span> */}
 							</div>
 						</div>
 					</section>
 				</div>
 				<div className="border-t border-t-border-gray-200">
-					<div className="flex items-center justify-center gap-10 text-sm">
+					<div className="flex items-center justify-center gap-45 text-sm p-2">
 						<span
 							onClick={() => {
 								handleTabChange("posts");
@@ -125,7 +125,7 @@ function Profile() {
 							TAGGED
 						</span>
 					</div>
-					<div className="grid grid-cols-3 gap-2">
+					<div className="grid grid-cols-3 gap-2 pl-[2%]">
 						{displayedPost?.map((post) => (
 							<div key={post?._id} className="group relative cursor-pointer overflow-hidden">
 								<img

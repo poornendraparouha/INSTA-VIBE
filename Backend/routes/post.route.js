@@ -33,7 +33,7 @@ router.route("/:id/comment").post(isAuthenticated, addComments);
 router.route("/:id/comment/all").get(getCommentsOfPost);
 
 // Bookmark & Unbookmark a Post
-router.route("/:id/bookmark").post(isAuthenticated, bookmarkPost);
+router.route("/:id/bookmark").get(isAuthenticated, bookmarkPost);
 
 // Delete a Post (Author only)
 router.route("/delete/:id").delete(isAuthenticated, deletePost);
