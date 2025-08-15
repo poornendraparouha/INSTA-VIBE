@@ -14,7 +14,9 @@ function Home() {
 				<Feed />
 				<Outlet />
 			</div>
-			<RightSidebar />
+			<div className="hidden md:block border-l border-gray-200 pl-[5px]">
+				<RightSidebar />
+			</div>
 		</div>
 	);
 }

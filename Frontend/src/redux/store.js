@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import authSlice from "./authSlice";
-import postSlice from "./postSlice";
-import chatSlice from "./chatSlice";
-import socketSlice from "./socketSlice"
+import authSlice from "./authSlice.js";
+import postSlice from "./postSlice.js";
+import chatSlice from "./chatSlice.js";
+import socketSlice from "./socketSlice.js";
+import rtnSlice from "./rtnSlice.js";
 import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
 	auth: authSlice,
 	post: postSlice,
 	chat: chatSlice,
-	socketio : socketSlice
+	socketio: socketSlice,
+	realTimeNotification: rtnSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
