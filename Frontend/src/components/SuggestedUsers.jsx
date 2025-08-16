@@ -32,7 +32,7 @@ const SuggestedUsers = () => {
 										{user?.username}
 									</Link>
 								</h1>
-								<span className="text-xs text-gray-500 truncate w-40">{user?.bio || "Bio here..."}</span>
+								<span className="text-xs text-gray-600 max-w-[180px] line-clamp-1">{user?.bio || "Bio here..."}</span>
 							</div>
 						</div>
 						<span className="text-xs font-semibold text-blue-500 hover:text-blue-700 transition">Follow</span>

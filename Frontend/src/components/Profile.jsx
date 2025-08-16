@@ -19,7 +19,7 @@ function Profile() {
 	const handleTabChange = (tab) => {
 		setActiveTab(tab);
 	};
-	const displayedPost = activeTab === "posts" ? userProfile?.posts : userProfile?.bookmarks;
+	const displayedPost = activeTab === "posts" ? userProfile?.posts : activeTab === "saved" ? userProfile?.bookmarks  : activeTab === "reels" ? userProfile?.reels : userProfile?.taggedPosts;
 
 	return (
 		<div className="flex max-w-5xl justify-center mx-auto pl-[4%]">
@@ -33,7 +33,7 @@ function Profile() {
 					</section>
 					<section>
 						<div className="flex flex-col gap-5">
-							<div className="flex items-center gap-4">
+							<div className="flex items-center gap-2 line-clamp-1">
 								<span className="font-bold">{userProfile?.username}</span>
 								{isLoggedInUserProfile ? (
 									<>
@@ -84,8 +84,6 @@ function Profile() {
 									<span>{userProfile?.username}</span>
 								</Badge>
 								<span className="font-semibold">{userProfile?.bio || "No bio available"}</span>
-								{/* <span>I am a full stack developer</span> */}
-								{/* <span>I am making a clone of Instagram</span> */}
 							</div>
 						</div>
 					</section>

@@ -173,7 +173,8 @@ export default function Post({ post }) {
 						className="cursor-pointer text-gray-700 hover:text-green-500 transition-colors duration-200"
 					/>
 				</div>
-				<Bookmark onClick={bookmarkHandler}
+				<Bookmark
+					onClick={bookmarkHandler}
 					size={22}
 					className="cursor-pointer text-gray-700 hover:text-yellow-500 transition-colors duration-200"
 				/>
