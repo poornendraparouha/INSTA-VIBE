@@ -11,6 +11,7 @@ import axios from "axios";
 import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { Badge } from "./ui/badge";
 import { Link } from "react-router-dom";
+import useFollowUnfollow from "@/hooks/useFollowUnfollow";
 
 export default function Post({ post }) {
 	const [text, setText] = useState("");
@@ -20,6 +21,8 @@ export default function Post({ post }) {
 	const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
 	const [likeCount, setLikeCount] = useState(post.likes.length);
 	const [comment, setComment] = useState(post.comments);
+	const { followUnfollowHandler, following } = useFollowUnfollow();
+
 
 	const dispatch = useDispatch();
 
@@ -134,9 +137,13 @@ export default function Post({ post }) {
 						<MoreHorizontal className="cursor-pointer" />
 					</DialogTrigger>
 					<DialogContent className="flex flex-col items-center text-sm text-center">
-						<Button variant="ghost" className="cursor-pointer w-fit text-[#ED4956] font-bold">
-							Unfollow
-						</Button>
+						{post?.author?._id !== user?._id && (
+							<Button variant="ghost" onClick={() => followUnfollowHandler(post.author._id)} className={`cursor-pointer w-fit font-bold ${
+        following.includes(post.author._id) ? "text-[#ED4956]" : "text-blue-500"
+      }`}>
+								{following.includes(post.author._id) ? "Unfollow" : "Follow"}
+							</Button>
+						)}
 						<Button variant="ghost" className="cursor-pointer w-fit ">
 							Add to Favorites
 						</Button>

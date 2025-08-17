@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { AtSign, Heart, MessageCircle } from "lucide-react";
+import useFollowUnfollow from "@/hooks/useFollowUnfollow";
+
 function Profile() {
 	const params = useParams();
 	const userId = params.id;
@@ -14,12 +16,20 @@ function Profile() {
 
 	const { userProfile, user } = useSelector((store) => store.auth);
 	const isLoggedInUserProfile = user?._id === userProfile?._id;
-	const isFollowing = true;
+	const { followUnfollowHandler, following } = useFollowUnfollow();
+	const isFollowing = following.includes(userProfile?._id);
 
 	const handleTabChange = (tab) => {
 		setActiveTab(tab);
 	};
-	const displayedPost = activeTab === "posts" ? userProfile?.posts : activeTab === "saved" ? userProfile?.bookmarks  : activeTab === "reels" ? userProfile?.reels : userProfile?.taggedPosts;
+	const displayedPost =
+		activeTab === "posts"
+			? userProfile?.posts
+			: activeTab === "saved"
+			? userProfile?.bookmarks
+			: activeTab === "reels"
+			? userProfile?.reels
+			: userProfile?.taggedPosts;
 
 	return (
 		<div className="flex max-w-5xl justify-center mx-auto pl-[4%]">
@@ -50,18 +60,27 @@ function Profile() {
 										</Button>
 									</>
 								) : isFollowing ? (
-									<Button variant="secondary" className=" bg-[#72c3f8] h-8">
-										{" "}
-										Follow{" "}
-									</Button>
-								) : (
 									<>
-										<Button className=" bg-[#0095F6] hover:bg-[#3192d2] h-8"> Unfollow </Button>
+										<Button
+											variant="secondary"
+											onClick={() => followUnfollowHandler(userProfile._id)}
+											className="bg-gray-200 hover:bg-gray-300 h-8"
+										>
+											{" "}
+											Unfollow{" "}
+										</Button>
 										<Button variant="secondary" className="bg-[#72c3f8] h-8">
 											{" "}
 											Message{" "}
 										</Button>
 									</>
+								) : (
+									<Button
+										onClick={() => followUnfollowHandler(userProfile._id)}
+										className="bg-[#0095F6] hover:bg-[#3192d2] text-white h-8"
+									>
+										Follow{" "}
+									</Button>
 								)}
 							</div>
 							<div className="flex items-center gap-10">

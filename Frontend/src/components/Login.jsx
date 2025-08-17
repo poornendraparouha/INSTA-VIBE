@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice";
+import { setFollowing } from "@/redux/followSlice";
 
 export default function Login() {
 	const [input, setInput] = useState({
@@ -33,6 +34,7 @@ export default function Login() {
 			});
 			if (res.data.success) {
 				dispatch(setAuthUser(res.data.user));
+				dispatch(setFollowing(res.data.user.following))
 				navigate("/");
 				toast.success(res.data.message);
 				setInput({
