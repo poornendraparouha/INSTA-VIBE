@@ -6,7 +6,7 @@ import useFollowUnfollow from "@/hooks/useFollowUnfollow";
 
 const SuggestedUsers = () => {
 	const { suggestedUsers } = useSelector((store) => store.auth);
-	const { followUnfollowHandler, following } = useFollowUnfollow(); 	
+	const { followUnfollowHandler, following } = useFollowUnfollow();
 	return (
 		<div className="mt-8 px-4">
 			<div className="flex items-center justify-between mb-4">

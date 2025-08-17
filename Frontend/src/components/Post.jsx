@@ -23,7 +23,6 @@ export default function Post({ post }) {
 	const [comment, setComment] = useState(post.comments);
 	const { followUnfollowHandler, following } = useFollowUnfollow();
 
-
 	const dispatch = useDispatch();
 
 	const chanegEventeHandler = (e) => {
@@ -138,9 +137,13 @@ export default function Post({ post }) {
 					</DialogTrigger>
 					<DialogContent className="flex flex-col items-center text-sm text-center">
 						{post?.author?._id !== user?._id && (
-							<Button variant="ghost" onClick={() => followUnfollowHandler(post.author._id)} className={`cursor-pointer w-fit font-bold ${
-        following.includes(post.author._id) ? "text-[#ED4956]" : "text-blue-500"
-      }`}>
+							<Button
+								variant="ghost"
+								onClick={() => followUnfollowHandler(post.author._id)}
+								className={`cursor-pointer w-fit font-bold ${
+									following.includes(post.author._id) ? "text-[#ED4956]" : "text-blue-500"
+								}`}
+							>
 								{following.includes(post.author._id) ? "Unfollow" : "Follow"}
 							</Button>
 						)}

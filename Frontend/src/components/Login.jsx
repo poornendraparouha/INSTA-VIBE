@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice";
 import { setFollowing } from "@/redux/followSlice";
 
@@ -16,6 +16,7 @@ export default function Login() {
 		password: "",
 	});
 	const [loading, setLoading] = useState(false);
+	const {user} = useSelector(store => store.auth);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -34,7 +35,7 @@ export default function Login() {
 			});
 			if (res.data.success) {
 				dispatch(setAuthUser(res.data.user));
-				dispatch(setFollowing(res.data.user.following))
+				dispatch(setFollowing(res.data.user.following));
 				navigate("/");
 				toast.success(res.data.message);
 				setInput({
@@ -49,6 +50,12 @@ export default function Login() {
 			setLoading(false);
 		}
 	};
+
+	useEffect(()=>{
+		if(user){
+			navigate('/')
+		}
+	},[])
 	return (
 		<div className="flex items-center justify-center w-screen h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-yellow-200">
 			<form

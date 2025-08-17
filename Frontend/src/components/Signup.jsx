@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function Signup() {
 	const [input, setInput] = useState({
@@ -14,6 +15,7 @@ export default function Signup() {
 		password: "",
 	});
 	const [loading, setLoading] = useState(false);
+	const {user} = useSelector(store => store.auth);
 	const navigate = useNavigate();
 	const changeEventHandeler = (e) => {
 		setInput({ ...input, [e.target.name]: e.target.value });
@@ -44,6 +46,11 @@ export default function Signup() {
 			setLoading(false);
 		}
 	};
+	useEffect(() => {
+		if (user) {
+			navigate("/");
+		}
+	}, []);
 	return (
 		<div className="flex items-center justify-center w-screen h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-yellow-200">
 			<form
