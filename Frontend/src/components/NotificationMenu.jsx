@@ -52,3 +52,39 @@ export default function NotificationMenu() {
 	);
 }
 
+{
+	/* {item.text === "Notifications" && likeNotification.length > 0 && (
+									<Popover>
+										<PopoverTrigger asChild>
+											<Button
+												size="icon"
+												className="rounded-full h-5 w-5 bg-red-600 hover:bg-red-600 absolute bottom-6 left-6"
+											>
+												{likeNotification.length}
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent>
+											<div>
+												{likeNotification.length === 0 ? (
+													<p>No new notification</p>
+												) : (
+													likeNotification.map((notification) => {
+														return (
+															<div key={notification.userId} className="flex items-center gap-2 my-2">
+																<Avatar>
+																	<AvatarImage src={notification.userDetails?.profilePicture} />
+																	<AvatarFallback>CN</AvatarFallback>
+																</Avatar>
+																<p className="text-sm">
+																	<span className="font-bold">{notification.userDetails?.username}</span> liked your
+																	post
+																</p>
+															</div>
+														);
+													})
+												)}
+											</div>
+										</PopoverContent>
+									</Popover>
+								)} */
+}

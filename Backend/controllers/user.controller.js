@@ -65,7 +65,7 @@ export const login = async (req, res) => {
 		const populatedPosts = await Promise.all(
 			user.posts.map(async (postId) => {
 				const post = await Post.findById(postId);
-				if (post.author.equals(user._id)) {
+				if (post && post.author && post.author.equals(user._id)) {
 					return post;
 				}
 				return null;
@@ -80,7 +80,7 @@ export const login = async (req, res) => {
 			gender: user.gender,
 			followers: user.followers,
 			following: user.following,
-			posts: populatedPosts,
+			posts: populatedPosts.filter(Boolean),
 			bookmarks: user.bookmarks,
 		};
 
