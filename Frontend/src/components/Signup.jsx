@@ -58,11 +58,11 @@ export default function Signup() {
 				className=" bg-black/30 backdrop-blur-md rounded-2xl shadow-lg flex flex-col gap-5 p-8 w-[90%] max-w-md"
 			>
 				<div className="mb-2 text-center">
-					<img src="/instagram.png" alt="logo" className="w-[60px] h-[60px] mx-auto" />
+					<img src="/logo.png" alt="logo" className="w-[60px] h-[60px] mx-auto" />
 					<h1 className="font-extrabold text-3xl bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 bg-clip-text text-transparent mb-2">
-						Instagram
+						INSTA VIBE
 					</h1>
-					<p className="text-sm text-gray-300 px-4">Login to use my instagram clone</p>
+					<p className="text-sm text-gray-300 px-4">Login to use my insta vibe app</p>
 				</div>
 				<div>
 					<Label className="font-medium text-gray-100 tracking-wide" htmlFor="username">
