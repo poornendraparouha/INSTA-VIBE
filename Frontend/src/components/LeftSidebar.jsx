@@ -1,7 +1,6 @@
 import { Heart, Home, LogOutIcon, MessageCircle, PlusSquare, Search, TrendingUp } from "lucide-react";
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import logo from "/logo.png";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -68,7 +67,7 @@ function LeftSidebar() {
 		<div className="fixed top-0 z-10 left-0 px-4 border-r border-gray-300 w-[16%] lg:w-[16%] md:w-[80px] h-screen">
 			<div className="flex flex-col">
 				<h1 className="flex font-bold text-xl gap-2 mt-[20px] mb-[15px]  pl-3">
-					<img src={logo} alt="App Logo" className="w-8 h-8 object-contain" />
+					<img src="/logo.png" alt="App Logo" className="w-8 h-8 object-contain" />
 					<span className="hidden lg:inline">INSTA VIBE</span>
 				</h1>
 				<div>
