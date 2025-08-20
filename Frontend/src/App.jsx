@@ -54,7 +54,12 @@ function App() {
 	const {socket} = useSelector(store => store.socketio)
 	useEffect(() => {
 		if (user) {
-			const socketio = io("http://localhost:8000", {
+			const socketURL =
+			window.location.hostname === "localhost"
+				? "http://localhost:8000"
+				: "https://insta-vibe-production.up.railway.app";
+
+			const socketio = io(socketURL, {
 				query: {
 					userId: user?._id,
 				},
