@@ -105,7 +105,7 @@ export default function Post({ post }) {
 
 	const bookmarkHandler = async () => {
 		try {
-			const res = await axios.post(`https://insta-vibe-production.up.railway.app/api/v1/post/${post._id}/bookmark`, {
+			const res = await axios.post(`https://insta-vibe-production.up.railway.app/api/v1/post/${post._id}/bookmark`, {}, {
 				withCredentials: true,
 			});
 
