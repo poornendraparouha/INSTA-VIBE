@@ -9,7 +9,7 @@ import CommentDialog from "./CommentDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
-import { setPosts, setSelectedPost, addBookmark, removeBookmark } from "@/redux/postSlice";
+import { setPosts, setSelectedPost } from "@/redux/postSlice";
 import { Badge } from "./ui/badge";
 import { Link } from "react-router-dom";
 import useFollowUnfollow from "@/hooks/useFollowUnfollow";
@@ -18,12 +18,12 @@ export default function Post({ post }) {
 	const [text, setText] = useState("");
 	const [open, setOpen] = useState(false);
 	const { user } = useSelector((store) => store.auth);
-	const { posts, bookmarks } = useSelector((store) => store.post);
+	const { posts } = useSelector((store) => store.post);
 	const [liked, setLiked] = useState(post.likes.includes(user?._id) || false);
 	const [likeCount, setLikeCount] = useState(post.likes.length);
 	const [comment, setComment] = useState(post.comments);
 	const { followUnfollowHandler, following } = useFollowUnfollow();
-	const isBookmarked = (bookmarks || []).includes(post._id);
+	const [bookmarked, setBookmarked] = useState(post.bookmarks?.includes(user?._id) || false); 
 
 	const dispatch = useDispatch();
 
@@ -105,22 +105,15 @@ export default function Post({ post }) {
 
 	const bookmarkHandler = async () => {
 		try {
-			const res = await axios.post(`https://insta-vibe-production.up.railway.app/api/v1/post/${post._id}/bookmark`, {}, {
+			const res = await axios.get(`https://insta-vibe-production.up.railway.app/api/v1/post/${post._id}/bookmark`,{}, {
 				withCredentials: true,
 			});
-
 			if (res.data?.success) {
-				if (isBookmarked) {
-					dispatch(removeBookmark(post._id));
-				} else {
-					dispatch(addBookmark(post._id));
-				}
+				setBookmarked(!bookmarked);
 				toast.success(res.data.message);
-			} else {
-				toast.error(res.data?.message || "Failed to toggle bookmark");
-			}
+			} 
 		} catch (error) {
-			toast.error(error.response?.data?.message || "Error in saving post");
+			toast.error(error.response?.data?.message);
 		}
 	};
 
@@ -193,7 +186,7 @@ export default function Post({ post }) {
 						className="cursor-pointer text-gray-700 hover:text-green-500 transition-colors duration-200"
 					/>
 				</div>
-				{isBookmarked ? (
+				{bookmarked ? (
 					<BsBookmarkFill
 						onClick={bookmarkHandler}
 						size={22}
