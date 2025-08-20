@@ -28,7 +28,7 @@ export default function CommentDialog({ open, setOpen }) {
 		if (open && selectedPost?._id) {
 			const fetchComments = async () => {
 				try {
-					const res = await axios.get(`insta-vibe-production.up.railway.app/api/v1/post/${selectedPost._id}/comment/all`, {
+					const res = await axios.get(`https://insta-vibe-production.up.railway.app/api/v1/post/${selectedPost._id}/comment/all`, {
 						withCredentials: true,
 					});
 					if (res.data.success) {
@@ -56,7 +56,7 @@ export default function CommentDialog({ open, setOpen }) {
 	const sendMessageHandler = async () => {
 		try {
 			const res = await axios.post(
-				`http://localhost:8000/api/v1/post/${selectedPost?._id}/comment`,
+				`https://insta-vibe-production.up.railway.app/api/v1/post/${selectedPost?._id}/comment`,
 				{ text },
 				{
 					headers: { "Content-Type": "application/json" },
