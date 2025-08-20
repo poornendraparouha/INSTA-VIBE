@@ -37,7 +37,7 @@ export default function Post({ post }) {
 		try {
 			const action = liked ? "dislike" : "like";
 			const res = await axios.post(
-				`insta-vibe-production.up.railway.app/api/v1/post/${post._id}/${action}`,
+				`https://insta-vibe-production.up.railway.app/api/v1/post/${post._id}/${action}`,
 				{},
 				{ withCredentials: true }
 			);
@@ -64,7 +64,7 @@ export default function Post({ post }) {
 	const commentHandler = async () => {
 		try {
 			const res = await axios.post(
-				`insta-vibe-production.up.railway.app/api/v1/post/${post._id}/comment`,
+				`https://insta-vibe-production.up.railway.app/api/v1/post/${post._id}/comment`,
 				{ text },
 				{
 					headers: { "Content-Type": "application/json" },
@@ -88,7 +88,7 @@ export default function Post({ post }) {
 
 	const deletePostHandler = async () => {
 		try {
-			const res = await axios.delete(`insta-vibe-production.up.railway.app/api/v1/post/delete/${post?._id}`, {
+			const res = await axios.delete(`https://insta-vibe-production.up.railway.app/api/v1/post/delete/${post?._id}`, {
 				withCredentials: true,
 			});
 			if (res.data.success) {
@@ -103,7 +103,7 @@ export default function Post({ post }) {
 
 	const bookmarkHandler = async () => {
 		try {
-			const res = await axios.get(`insta-vibe-production.up.railway.app/api/v1/post/${post._id}/bookmark`, {
+			const res = await axios.get(`https://insta-vibe-production.up.railway.app/api/v1/post/${post._id}/bookmark`, {
 				withCredentials: true,
 			});
 			if (res.data.success) {

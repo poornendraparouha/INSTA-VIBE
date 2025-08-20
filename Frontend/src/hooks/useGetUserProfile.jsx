@@ -9,7 +9,7 @@ const useGetUserProfile = (userId) => {
 	useEffect(() => {
 		const fetchUserProfile = async () => {
 			try {
-				const response = await axios.get(`insta-vibe-production.up.railway.app/api/v1/user/${userId}/profile`, {
+				const response = await axios.get(`https://insta-vibe-production.up.railway.app/api/v1/user/${userId}/profile`, {
 					withCredentials: true,
 				});
 				if (response.data.success) {

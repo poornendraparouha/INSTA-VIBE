@@ -22,7 +22,7 @@ function ChatPage() {
 	const sendMessageHandler = async (receiverId) => {
 		try {
 			const res = await axios.post(
-				`insta-vibe-production.up.railway.app/api/v1/message/send/${receiverId}`,
+				`https://insta-vibe-production.up.railway.app/api/v1/message/send/${receiverId}`,
 				{ textMessage },
 				{
 					headers: {

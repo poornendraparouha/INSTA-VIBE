@@ -35,7 +35,7 @@ export default function CreatePost({ open, setOpen }) {
 		if (imagePreview) formData.append("image", file);
 		try {
 			setLoading(true);
-			const res = await axios.post("insta-vibe-production.up.railway.app/api/v1/post/addpost", formData, {
+			const res = await axios.post("https://insta-vibe-production.up.railway.app/api/v1/post/addpost", formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},

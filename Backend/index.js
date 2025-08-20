@@ -20,7 +20,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
-	origin: process.env.NEW_URL,
+	origin: [
+		 "http://localhost:5173",
+		process.env.FRONTEND_URL
+	],
 	credentials: true,
 };
 app.use(cors(corsOptions));

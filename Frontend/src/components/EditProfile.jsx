@@ -42,7 +42,7 @@ function EditProfile() {
 
 		try {
 			setLoading(true);
-			const res = await axios.post(`insta-vibe-production.up.railway.app/api/v1/user/profile/edit`, formData, {
+			const res = await axios.post(`https://insta-vibe-production.up.railway.app/api/v1/user/profile/edit`, formData, {
 				headers: { "Content-Type": "mulipart/form-data" },
 				withCredentials: true,
 			});

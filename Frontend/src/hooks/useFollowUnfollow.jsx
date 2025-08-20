@@ -10,7 +10,7 @@ export default function useFollowUnfollow() {
 	const followUnfollowHandler = async (userId) => {
 		try {
 			const res = await axios.post(
-				`insta-vibe-production.up.railway.app/api/v1/user/followorunfollow/${userId}`,
+				`https://insta-vibe-production.up.railway.app/api/v1/user/followorunfollow/${userId}`,
 				{},
 				{ withCredentials: true }
 			);

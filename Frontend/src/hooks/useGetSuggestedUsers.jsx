@@ -9,7 +9,7 @@ const useGetSuggestedUsers = () => {
 	useEffect(() => {
 		const fetchSuggestedUsers = async () => {
 			try {
-				const response = await axios.get("insta-vibe-production.up.railway.app/api/v1/user/suggested", { withCredentials: true });
+				const response = await axios.get("https://insta-vibe-production.up.railway.app/api/v1/user/suggested", { withCredentials: true });
 				if (response.data.success) {
 					dispatch(setSuggestedUsers(response.data.users));
 				}

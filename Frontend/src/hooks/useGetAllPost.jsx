@@ -9,7 +9,7 @@ const useGetAllPost = () => {
 	useEffect(() => {
 		const fetchAllPosts = async () => {
 			try {
-				const response = await axios.get("insta-vibe-production.up.railway.app/api/v1/post/allposts", { withCredentials: true });
+				const response = await axios.get("https://insta-vibe-production.up.railway.app/api/v1/post/allposts", { withCredentials: true });
 				if (response.data.success) {
 					dispatch(setPosts(response.data.posts));
 				}
