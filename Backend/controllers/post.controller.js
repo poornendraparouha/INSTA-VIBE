@@ -3,7 +3,7 @@ import cloudinary from "../utility/cloudinary.js";
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from "../models/comment.model.js";
-import {getReceierSocketId, io} from "../socket/socket.js"
+import { getReceierSocketId, io } from "../socket/socket.js";
 
 export const addNewPost = async (req, res) => {
 	try {
@@ -265,24 +265,23 @@ export const bookmarkPost = async (req, res) => {
 
 		const post = await Post.findById(postId);
 		if (!post) {
-			return res.status(404).json({
-				message: "Post Not Found",
-				success: false,
-			});
+			return res.status(404).json({ message: "Post Not Found", success: false });
 		}
-		let user = await User.findById(authorId);
-		if (user.bookmarks.includes(post._id)) {
-			// if already bookmarked -->remove from bookmarks
-			await user.updateOne({ $pull: { bookmarks: post._id } });
-			await user.save();
+
+		const user = await User.findById(authorId);
+
+		// Convert ObjectIds to strings for safe comparison
+		const isBookmarked = user.bookmarks.map((id) => id.toString()).includes(post._id.toString());
+
+		if (isBookmarked) {
+			await User.findByIdAndUpdate(authorId, { $pull: { bookmarks: post._id } });
 			return res.status(200).json({
 				type: "unsaved",
 				message: "Post removed from bookmarks",
 				success: true,
 			});
 		} else {
-			await user.updateOne({ $addToSet: { bookmarks: post._id } });
-			await user.save();
+			await User.findByIdAndUpdate(authorId, { $addToSet: { bookmarks: post._id } });
 			return res.status(200).json({
 				type: "saved",
 				message: "Post bookmarked successfully",
@@ -291,5 +290,46 @@ export const bookmarkPost = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(error);
+		return res.status(500).json({ message: "Error in saving post", success: false });
 	}
 };
+
+// export const bookmarkPost = async (req, res) => {
+// 	try {
+// 		const postId = req.params.id;
+// 		const authorId = req.id;
+
+// 		const post = await Post.findById(postId);
+// 		if (!post) {
+// 			return res.status(404).json({
+// 				message: "Post Not Found",
+// 				success: false,
+// 			});
+// 		}
+// 		const user = await User.findById(authorId);
+// 		if (user.bookmarks.includes(post._id)) {
+// 			// if already bookmarked -->remove from bookmarks
+// 			await user.updateOne({ $pull: { bookmarks: post._id } });
+// 			await user.save();
+// 			return res.status(200).json({
+// 				type: "unsaved",
+// 				message: "Post removed from bookmarks",
+// 				success: true,
+// 			});
+// 		} else {
+// 			await user.updateOne({ $addToSet: { bookmarks: post._id } });
+// 			await user.save();
+// 			return res.status(200).json({
+// 				type: "saved",
+// 				message: "Post bookmarked successfully",
+// 				success: true,
+// 			});
+// 		}
+// 	} catch (error) {
+// 		console.log(error);
+// 		return res.status(500).json({
+// 			message: "Error in saving post",
+// 			success: false,
+// 		});
+// 	}
+// };
