@@ -265,23 +265,28 @@ export const bookmarkPost = async (req, res) => {
 
 		const post = await Post.findById(postId);
 		if (!post) {
-			return res.status(404).json({ message: "Post Not Found", success: false });
+			return res.status(404).json({
+				message: "Post Not Found",
+				success: false,
+			});
 		}
 
 		const user = await User.findById(authorId);
+		if (!user) {
+			return res.status(404).json({ message: "User Not Found", success: false });
+		}
 
-		// Convert ObjectIds to strings for safe comparison
-		const isBookmarked = user.bookmarks.map((id) => id.toString()).includes(post._id.toString());
+		const isBookmarked = user.bookmarks.some((id) => id.toString() === post._id.toString());
 
 		if (isBookmarked) {
-			await User.findByIdAndUpdate(authorId, { $pull: { bookmarks: post._id } });
+			await user.updateOne({ $pull: { bookmarks: post._id } });
 			return res.status(200).json({
 				type: "unsaved",
 				message: "Post removed from bookmarks",
 				success: true,
 			});
 		} else {
-			await User.findByIdAndUpdate(authorId, { $addToSet: { bookmarks: post._id } });
+			await user.updateOne({ $addToSet: { bookmarks: post._id } });
 			return res.status(200).json({
 				type: "saved",
 				message: "Post bookmarked successfully",
@@ -290,7 +295,10 @@ export const bookmarkPost = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({ message: "Error in saving post", success: false });
+		return res.status(500).json({
+			message: "Error in saving post",
+			success: false,
+		});
 	}
 };
 
