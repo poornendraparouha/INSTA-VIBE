@@ -5,6 +5,7 @@ const postSlice = createSlice({
 	initialState: {
 		posts: [],
 		selectedPost: null,
+		bookmarks: [],
 	},
 	reducers: {
 		// Action to set posts
@@ -14,8 +15,16 @@ const postSlice = createSlice({
 		setSelectedPost: (state, action) => {
 			state.selectedPost = action.payload;
 		},
+		addBookmark: (state, action) => {
+			if (!state.bookmarks.includes(action.payload)) {
+				state.bookmarks.push(action.payload);
+			}
+		},
+		removeBookmark: (state, action) => {
+			state.bookmarks = state.bookmarks.filter((id) => id !== action.payload);
+		},
 	},
 });
 
-export const { setPosts, setSelectedPost } = postSlice.actions;
+export const { setPosts, setSelectedPost, addBookmark, removeBookmark } = postSlice.actions;
 export default postSlice.reducer;
