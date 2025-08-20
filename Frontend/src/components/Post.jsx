@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MessageCircle, Send, MoreHorizontal, Bookmark } from "lucide-react";
+import { BsBookmarkFill } from "react-icons/bs";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { Button } from "./ui/button";
 import CommentDialog from "./CommentDialog";
@@ -22,6 +23,7 @@ export default function Post({ post }) {
 	const [likeCount, setLikeCount] = useState(post.likes.length);
 	const [comment, setComment] = useState(post.comments);
 	const { followUnfollowHandler, following } = useFollowUnfollow();
+	const [bookmarked, setBookmarked] = useState(user?.bookmarks?.includes(post._id) || false);
 
 	const dispatch = useDispatch();
 
@@ -107,6 +109,7 @@ export default function Post({ post }) {
 				withCredentials: true,
 			});
 			if (res.data.success) {
+				setBookmarked(!bookmarked);
 				toast.success(res.data.message);
 			}
 		} catch (error) {
@@ -183,11 +186,19 @@ export default function Post({ post }) {
 						className="cursor-pointer text-gray-700 hover:text-green-500 transition-colors duration-200"
 					/>
 				</div>
-				<Bookmark
-					onClick={bookmarkHandler}
-					size={22}
-					className="cursor-pointer text-gray-700 hover:text-yellow-500 transition-colors duration-200"
-				/>
+				{bookmarked ? (
+					<BsBookmarkFill
+						onClick={bookmarkHandler}
+						size={22}
+						className="cursor-pointer text-black transition-colors duration-200"
+					/>
+				) : (
+					<Bookmark
+						onClick={bookmarkHandler}
+						size={22}
+						className="cursor-pointer text-gray-700 hover:text-yellow-500 transition-colors duration-200"
+					/>
+				)}
 			</div>
 			<span className="text-sm font-semibold text-gray-800 tracking-tight mb-2">{likeCount} likes</span>
 			<p>
