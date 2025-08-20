@@ -258,50 +258,6 @@ export const deletePost = async (req, res) => {
 	}
 };
 
-export const bookmarkPost = async (req, res) => {
-	try {
-		const postId = req.params.id;
-		const authorId = req.id;
-
-		const post = await Post.findById(postId);
-		if (!post) {
-			return res.status(404).json({
-				message: "Post Not Found",
-				success: false,
-			});
-		}
-
-		const user = await User.findById(authorId);
-		if (!user) {
-			return res.status(404).json({ message: "User Not Found", success: false });
-		}
-
-		const isBookmarked = user.bookmarks.some((id) => id.toString() === post._id.toString());
-
-		if (isBookmarked) {
-			await user.updateOne({ $pull: { bookmarks: post._id } });
-			return res.status(200).json({
-				type: "unsaved",
-				message: "Post removed from bookmarks",
-				success: true,
-			});
-		} else {
-			await user.updateOne({ $addToSet: { bookmarks: post._id } });
-			return res.status(200).json({
-				type: "saved",
-				message: "Post bookmarked successfully",
-				success: true,
-			});
-		}
-	} catch (error) {
-		console.log(error);
-		return res.status(500).json({
-			message: "Error in saving post",
-			success: false,
-		});
-	}
-};
-
 // export const bookmarkPost = async (req, res) => {
 // 	try {
 // 		const postId = req.params.id;
@@ -335,9 +291,69 @@ export const bookmarkPost = async (req, res) => {
 // 		}
 // 	} catch (error) {
 // 		console.log(error);
-// 		return res.status(500).json({
-// 			message: "Error in saving post",
-// 			success: false,
-// 		});
 // 	}
 // };
+
+export const bookmarkPost = async (req, res) => {
+	try {
+		const postId = req.params.id;
+		// It is better to use a more descriptive name like userId
+		// since this is the user performing the bookmark action.
+		const userId = req.id;
+
+		// Check if the postId or userId are missing.
+		// This adds a layer of protection before querying the database.
+		if (!postId || !userId) {
+			return res.status(400).json({
+				message: "Invalid request. Post or user ID is missing.",
+				success: false,
+			});
+		}
+
+		// First, check if the post exists.
+		const post = await Post.findById(postId);
+		if (!post) {
+			return res.status(404).json({
+				message: "Post Not Found",
+				success: false,
+			});
+		}
+
+		// Second, find the user who is bookmarking the post.
+		const user = await User.findById(userId);
+		// IMPORTANT: Check if the user exists. This is the most likely source of your error.
+		if (!user) {
+			return res.status(404).json({
+				message: "User Not Found",
+				success: false,
+			});
+		}
+
+		// Now that we have confirmed both the post and the user exist,
+		// we can safely check the bookmarks array and update it.
+		if (user.bookmarks.includes(post._id)) {
+			// if already bookmarked -->remove from bookmarks
+			await user.updateOne({ $pull: { bookmarks: post._id } });
+			// You don't need to call .save() after .updateOne().
+			return res.status(200).json({
+				type: "unsaved",
+				message: "Post removed from bookmarks",
+				success: true,
+			});
+		} else {
+			await user.updateOne({ $addToSet: { bookmarks: post._id } });
+			// You don't need to call .save() after .updateOne().
+			return res.status(200).json({
+				type: "saved",
+				message: "Post bookmarked successfully",
+				success: true,
+			});
+		}
+	} catch (error) {
+		console.error(error); // Use console.error for errors
+		return res.status(500).json({
+			message: "An internal server error occurred.", // Use a more generic message for security
+			success: false,
+		});
+	}
+};
